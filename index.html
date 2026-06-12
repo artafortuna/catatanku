@@ -1,206 +1,738 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Arta Notes by PT Arta Makmur Jaya Sentosa</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>
-        tailwind.config = { darkMode: 'class' }
-    </script>
+    <title>Catatan Arta</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* 20 Warna Futurisik */
-        .note-1 { background: #f1f5f9; color: #1e293b; border: 1px solid #cbd5e1; }
-        .note-2 { background: #fef3c7; color: #78350f; border: 1px solid #fcd34d; }
-        .note-3 { background: #d1fae5; color: #064e3b; border: 1px solid #6ee7b7; }
-        .note-4 { background: #dbeafe; color: #1e3a8a; border: 1px solid #93c5fd; }
-        .note-5 { background: #ffe4e6; color: #881337; border: 1px solid #fda4af; }
-        .note-6 { background: #ede9fe; color: #5b21b6; border: 1px solid #a78bfa; }
-        .note-7 { background: #ffedd5; color: #7c2d12; border: 1px solid #fdba74; }
-        .note-8 { background: #ecfccb; color: #3f6212; border: 1px solid #bef264; }
-        .note-9 { background: #cffafe; color: #155e75; border: 1px solid #67e8f9; }
-        .note-10 { background: #e0f2fe; color: #075985; border: 1px solid #7dd3fc; }
-        .note-11 { background: #f5d0fe; color: #701a75; border: 1px solid #e879f9; }
-        .note-12 { background: #fce7f3; color: #9d174d; border: 1px solid #f9a8d4; }
-        .note-13 { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
-        .note-14 { background: #99f6e4; color: #115e59; border: 1px solid #5eead4; }
-        .note-15 { background: #e0e7ff; color: #3730a3; border: 1px solid #a5b4fc; }
-        .note-16 { background: #f3e8ff; color: #581c87; border: 1px solid #c084fc; }
-        .note-17 { background: #e4e4e7; color: #27272a; border: 1px solid #d4d4d8; }
-        .note-18 { background: #e7e5e4; color: #292524; border: 1px solid #d6d3d1; }
-        .note-19 { background: #e5e5e5; color: #262626; border: 1px solid #d4d4d4; }
-        .note-20 { background: #fee2e2; color: #991b1b; border: 1px solid #f87171; }
+        /* --- CSS VARIABLES --- */
+        :root {
+            --bg-color: #f8fafc;
+            --surface-color: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --accent-color: #3b82f6;
+            --accent-hover: #2563eb;
+            --danger-color: #ef4444;
+            --danger-hover: #dc2626;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 20px rgba(0,0,0,0.05);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.08);
+            --radius: 16px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #0f172a;
+            --surface-color: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-color: #60a5fa;
+            --accent-hover: #3b82f6;
+            --border-color: #334155;
+            --shadow-md: 0 4px 20px rgba(0,0,0,0.3);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.4);
+        }
+
+        /* --- GLOBAL --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- NAVBAR --- */
+        nav {
+            background-color: rgba(var(--surface-color), 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .nav-brand-container {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .nav-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-color), #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .search-bar {
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+            border: 1px solid var(--border-color);
+            background-color: var(--surface-color);
+            color: var(--text-primary);
+            width: 250px;
+            outline: none;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .search-bar:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-primary);
+            transition: var(--transition);
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--border-color);
+        }
+
+        /* --- MAIN CONTAINER --- */
+        main {
+            flex: 1;
+            width: 100%;
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 2rem;
+        }
+
+        /* --- FORM SECTION --- */
+        .form-section {
+            background-color: var(--surface-color);
+            padding: 2rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-md);
+            height: fit-content;
+            border: 1px solid var(--border-color);
+        }
+
+        .form-section h2 {
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        input[type="text"], textarea, select {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            outline: none;
+            transition: var(--transition);
+        }
+
+        input[type="text"]:focus, textarea:focus, select:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        input[type="file"] {
+            width: 100%;
+            padding: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            background-color: var(--bg-color);
+            border-radius: 8px;
+            border: 1px dashed var(--border-color);
+            cursor: pointer;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 0.8rem;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-submit:hover {
+            background-color: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        /* --- NOTES SECTION --- */
+        .notes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            align-content: start;
+        }
+
+        .note-card {
+            background-color: var(--surface-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            position: relative;
+        }
+
+        .note-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .note-category {
+            display: inline-block;
+            font-size: 0.75rem;
+            padding: 0.3rem 0.8rem;
+            background-color: rgba(59, 130, 246, 0.1);
+            color: var(--accent-color);
+            border-radius: 50px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .note-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            word-wrap: break-word;
+        }
+
+        .note-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            border-top: 1px solid var(--border-color);
+            padding-top: 1rem;
+        }
+
+        .btn-action {
+            flex: 1;
+            padding: 0.5rem;
+            border: none;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.85rem;
+        }
+
+        .btn-view {
+            background-color: rgba(59, 130, 246, 0.15);
+            color: var(--accent-color);
+        }
+
+        .btn-view:hover {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .btn-edit {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-edit:hover {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+
+        .btn-delete {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--danger-color);
+        }
+
+        .btn-delete:hover {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        /* --- MODAL GLOBAL --- */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        /* --- MODAL DETAIL CATATAN --- */
+        .text-modal-content {
+            background-color: var(--surface-color);
+            color: var(--text-primary);
+            padding: 2.5rem;
+            border-radius: var(--radius);
+            width: 90%;
+            max-width: 600px;
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+        }
+
+        .modal.active .text-modal-content {
+            transform: scale(1);
+        }
+
+        .text-modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: var(--transition);
+        }
+
+        .text-modal-close:hover {
+            color: var(--danger-color);
+        }
+
+        .view-date {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            display: block;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1rem;
+        }
+
+        .view-content {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: var(--text-primary);
+            white-space: pre-wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .view-image {
+            width: 100%;
+            border-radius: 8px;
+            object-fit: cover;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid var(--border-color);
+        }
+
+        .view-image:hover {
+            opacity: 0.9;
+        }
+
+        /* --- MODAL FULLSCREEN IMAGE (Paling Atas) --- */
+        #imageModal {
+            z-index: 1010; /* Berada di atas text modal */
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+        
+        .image-modal-content {
+            max-width: 90%;
+            max-height: 90vh;
+            border-radius: 8px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+        }
+
+        .modal.active .image-modal-content {
+            transform: scale(1);
+        }
+
+        .image-modal-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .image-modal-close:hover {
+            color: var(--danger-color);
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--border-color);
+            background-color: transparent;
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 900px) {
+            main {
+                grid-template-columns: 1fr;
+            }
+            .search-bar {
+                width: 150px;
+            }
+        }
     </style>
 </head>
-<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 min-h-screen flex flex-col font-sans">
+<body>
 
-    <!-- NAVBAR -->
-    <nav class="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 p-4 sticky top-0 z-40">
-        <div class="max-w-5xl mx-auto flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <img src="https://images.bukaolshop.com/hosting/54490/baeebfa8be78791927.png"" alt="Logo" class="w-10 h-10 rounded-lg">
-                <h1 class="font-bold text-xl"></b></b>CATATAN PENTING</h1>
-            </div>
-            <button id="themeToggle" class="p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 transition">
-                <i class="fa-solid fa-moon text-lg" id="themeIcon"></i>
+    <nav>
+        <div class="nav-brand-container">
+            <img src="https://images.bukaolshop.com/hosting/54490/baeebfa8be78791927.png" style="width: 28px; height: 28px; border-radius: 6px; object-fit: cover;" alt="App Logo">
+            <div class="nav-brand">Catatan Penting</div>
+        </div>
+        
+        <div class="nav-controls">
+            <input type="text" id="searchInput" class="search-bar" placeholder="Cari judul/kategori..." onkeyup="searchNotes()">
+            <button class="theme-toggle" id="themeBtn" onclick="toggleTheme()" title="Ganti Tema">
+                <svg id="moonIcon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                <svg id="sunIcon" style="display:none;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
             </button>
         </div>
     </nav>
 
-    <!-- CONTENT -->
-    <main class="flex-grow max-w-5xl mx-auto p-4 py-8 w-full">
-        <div class="flex flex-col md:flex-row justify-between mb-8 gap-4">
+    <main>
+        <aside class="form-section">
+            <h2 id="formTitle">Buat Catatan Baru</h2>
+            <form id="noteForm">
+                <input type="hidden" id="noteId">
+                <div class="form-group">
+                    <label for="title">Judul Catatan</label>
+                    <input type="text" id="title" required placeholder="Masukkan judul...">
+                </div>
+                <div class="form-group">
+                    <label for="category">Kategori</label>
+                    <input type="text" id="category" required placeholder="Contoh: Pekerjaan, Pribadi...">
+                </div>
+                <div class="form-group">
+                    <label for="content">Isi Catatan</label>
+                    <textarea id="content" required placeholder="Tulis sesuatu yang hebat..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="image">Lampirkan Foto (Opsional)</label>
+                    <input type="file" id="image" accept="image/*">
+                    <input type="hidden" id="existingImage">
+                </div>
+                <button type="submit" class="btn-submit" id="submitBtn">Simpan Catatan</button>
+            </form>
+        </aside>
 
-            <div class="flex gap-2">
-                <select id="categoryFilter" onchange="renderNotes()" class="p-2 rounded-lg border bg-white dark:bg-slate-800 dark:border-slate-700 text-sm outline-none w-48">
-                    <option value="Semua">Semua Kategori</option>
-                </select>
-                <button onclick="openNoteModal()" class="bg-yellow-600 text-white px-6 py-2 rounded-lg hover:bg-yellow-700 transition whitespace-nowrap font-bold">
-                    <i class="fa-solid fa-plus mr-2"></i> Baru
-                </button>
-            </div>
-        </div>
-        <div id="notesGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"></div>
+        <section class="notes-grid" id="notesContainer">
+            </section>
     </main>
 
-    <!-- FOOTER -->
-    <footer class="bg-white dark:bg-slate-800 py-8 text-center border-t border-slate-200 dark:border-slate-700 mt-auto">
-        <p class="font-bold text-slate-800 dark:text-white">PT ARTA MAKMUR JAYA SENTOSA</p>
-        <p class="text-xs text-slate-500 mt-1">© 2026 Hak Cipta Dilindungi</p>
+    <footer>
+        &copy; 2026 PT Arta Makmur Jaya Sentosa. All rights reserved.
     </footer>
 
-    <!-- MODAL TAMBAH/EDIT -->
-    <div id="noteModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-slate-800 w-full max-w-md p-6 rounded-3xl shadow-2xl">
-            <input type="hidden" id="noteId">
-            <input type="text" id="noteTitle" placeholder="Judul catatan..." class="w-full mb-3 p-3 border rounded-xl dark:bg-slate-900 dark:border-slate-700 outline-none focus:ring-2 focus:ring-yellow-500">
-            <input type="text" id="noteCategory" placeholder="Kategori..." class="w-full mb-3 p-3 border rounded-xl dark:bg-slate-900 dark:border-slate-700 outline-none">
-            <textarea id="noteContent" rows="5" placeholder="Isi catatan..." class="w-full mb-3 p-3 border rounded-xl dark:bg-slate-900 dark:border-slate-700 outline-none"></textarea>
-            
-            <p class="text-xs font-bold mb-2 uppercase opacity-60">Pilih Warna:</p>
-            <div id="colorPicker" class="grid grid-cols-5 gap-2 mb-6 h-20 overflow-y-auto p-2 bg-slate-100 dark:bg-slate-900 rounded-lg"></div>
-            
-            <div class="flex justify-end gap-2">
-                <button onclick="closeNoteModal()" class="px-6 py-2 text-slate-500">Batal</button>
-                <button onclick="saveNote()" class="px-6 py-2 bg-yellow-600 text-white rounded-xl font-bold shadow-lg shadow-yellow-600/30 hover:bg-yellow-500">Simpan</button>
-            </div>
+    <div id="viewModal" class="modal" onclick="closeViewModal(event)">
+        <div class="text-modal-content">
+            <span class="text-modal-close" onclick="closeViewModal(event)">&times;</span>
+            <span id="viewCategory" class="note-category"></span>
+            <h2 id="viewTitle" style="margin: 0.5rem 0;"></h2>
+            <span id="viewDate" class="view-date"></span>
+            <p id="viewContent" class="view-content"></p>
+            <img id="viewImage" class="view-image" style="display: none;" onclick="openImageModal(this.src)" alt="Lampiran Catatan">
         </div>
     </div>
 
-    <!-- MODAL BACA -->
-    <div id="viewModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-slate-800 w-full max-w-lg p-8 rounded-3xl shadow-2xl border dark:border-slate-700">
-            <h3 id="viewTitle" class="font-bold text-2xl mb-4 pb-4 border-b dark:border-slate-700"></h3>
-            <div id="viewContent" class="text-sm opacity-90 whitespace-pre-wrap leading-relaxed mb-6 overflow-y-auto max-h-[50vh] pr-2"></div>
-            <button onclick="document.getElementById('viewModal').classList.add('hidden')" class="w-full py-3 bg-slate-200 dark:bg-slate-700 rounded-xl font-bold hover:opacity-80 transition">Tutup</button>
-        </div>
+    <div id="imageModal" class="modal" onclick="closeImageModal(event)">
+        <span class="image-modal-close">&times;</span>
+        <img class="image-modal-content" id="fullImage">
     </div>
 
     <script>
-        let notes = JSON.parse(localStorage.getItem('arta_notes')) || [];
+        // --- INISIALISASI ---
+        let notes = JSON.parse(localStorage.getItem('nexus_notes')) || [];
+        const notesContainer = document.getElementById('notesContainer');
+        const noteForm = document.getElementById('noteForm');
+        
+        // Render awal
+        renderNotes();
+        applySavedTheme();
 
-        // Init Theme
-        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-            document.getElementById('themeIcon').className = 'fa-solid fa-sun';
+        // --- MANAJEMEN TEMA ---
+        function toggleTheme() {
+            const htmlTag = document.documentElement;
+            const currentTheme = htmlTag.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            htmlTag.setAttribute('data-theme', newTheme);
+            localStorage.setItem('nexus_theme', newTheme);
+            updateThemeIcon(newTheme);
         }
 
-        document.getElementById('themeToggle').addEventListener('click', () => {
-            document.documentElement.classList.toggle('dark');
-            localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
-            document.getElementById('themeIcon').className = document.documentElement.classList.contains('dark') ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+        function applySavedTheme() {
+            const savedTheme = localStorage.getItem('nexus_theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            updateThemeIcon(savedTheme);
+        }
+
+        function updateThemeIcon(theme) {
+            const moonIcon = document.getElementById('moonIcon');
+            const sunIcon = document.getElementById('sunIcon');
+            if (theme === 'dark') {
+                moonIcon.style.display = 'none';
+                sunIcon.style.display = 'block';
+            } else {
+                moonIcon.style.display = 'block';
+                sunIcon.style.display = 'none';
+            }
+        }
+
+        // --- FORMAT TANGGAL (Tanpa Jam) ---
+        function getCurrentDate() {
+            const options = { day: 'numeric', month: 'long', year: 'numeric' };
+            return new Date().toLocaleDateString('id-ID', options);
+        }
+
+        // --- RENDER CATATAN (HANYA KATEGORI & JUDUL) ---
+        function renderNotes(filterText = '') {
+            notesContainer.innerHTML = '';
+            
+            const filteredNotes = notes.filter(note => 
+                note.title.toLowerCase().includes(filterText.toLowerCase()) || 
+                note.category.toLowerCase().includes(filterText.toLowerCase())
+            );
+
+            if(filteredNotes.length === 0) {
+                notesContainer.innerHTML = '<p style="color: var(--text-secondary); grid-column: 1/-1; text-align: center; padding: 2rem;">Tidak ada catatan ditemukan.</p>';
+                return;
+            }
+
+            // Render catatan dari yang terbaru
+            filteredNotes.reverse().forEach(note => {
+                const card = document.createElement('div');
+                card.className = 'note-card';
+
+                // Isi dari List Card saat ini sangat minimalis
+                card.innerHTML = `
+                    <div>
+                        <span class="note-category">${note.category}</span>
+                        <h3 class="note-title">${note.title}</h3>
+                    </div>
+                    <div class="note-actions">
+                        <button class="btn-action btn-view" onclick="viewNote(${note.id})">Lihat</button>
+                        <button class="btn-action btn-edit" onclick="editNote(${note.id})">Edit</button>
+                        <button class="btn-action btn-delete" onclick="deleteNote(${note.id})">Hapus</button>
+                    </div>
+                `;
+                notesContainer.appendChild(card);
+            });
+            filteredNotes.reverse(); // Kembalikan urutan array
+        }
+
+        // --- TAMBAH / UPDATE CATATAN ---
+        noteForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const idInput = document.getElementById('noteId').value;
+            const title = document.getElementById('title').value;
+            const category = document.getElementById('category').value;
+            const content = document.getElementById('content').value;
+            const imageFile = document.getElementById('image').files[0];
+            const existingImage = document.getElementById('existingImage').value;
+
+            if (imageFile) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    saveToState(idInput, title, category, content, event.target.result);
+                };
+                reader.readAsDataURL(imageFile);
+            } else {
+                saveToState(idInput, title, category, content, existingImage || null);
+            }
         });
 
-        // Color Picker Init
-        const cp = document.getElementById('colorPicker');
-        for(let i=1; i<=20; i++) cp.innerHTML += `<label class="w-6 h-6 rounded-full note-${i} cursor-pointer flex items-center justify-center shadow-sm"><input type="radio" name="noteColor" value="${i}" ${i===1?'checked':''}></label>`;
+        function saveToState(id, title, category, content, imageBase64) {
+            if (id) {
+                const index = notes.findIndex(n => n.id == id);
+                if(index !== -1) {
+                    notes[index] = { ...notes[index], title, category, content, image: imageBase64 };
+                }
+            } else {
+                const newNote = {
+                    id: Date.now(),
+                    title,
+                    category,
+                    content,
+                    date: getCurrentDate(),
+                    image: imageBase64
+                };
+                notes.push(newNote);
+            }
 
-        // Helper
-        function formatDateTime(ts) {
-            const d = new Date(ts);
-            return d.toLocaleDateString('id-ID', {day:'2-digit', month:'short', year:'numeric'}) + ' ' + d.toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'});
-        }
-
-        function openNoteModal(id = null) {
-            const n = notes.find(note => note.id === id);
-            document.getElementById('noteId').value = n ? n.id : '';
-            document.getElementById('noteTitle').value = n ? n.title : '';
-            document.getElementById('noteCategory').value = n ? n.category : '';
-            document.getElementById('noteContent').value = n ? n.content : '';
-            if(n) document.querySelector(`input[name="noteColor"][value="${n.color}"]`).checked = true;
-            document.getElementById('noteModal').classList.remove('hidden');
-        }
-
-        function viewNote(id) {
-            const n = notes.find(note => note.id === id);
-            document.getElementById('viewTitle').innerText = n.title;
-            document.getElementById('viewContent').innerText = n.content;
-            document.getElementById('viewModal').classList.remove('hidden');
-        }
-
-        function closeNoteModal() { document.getElementById('noteModal').classList.add('hidden'); }
-
-        function saveNote() {
-            const id = parseInt(document.getElementById('noteId').value) || Date.now();
-            const note = {
-                id,
-                title: document.getElementById('noteTitle').value,
-                category: document.getElementById('noteCategory').value || 'Umum',
-                content: document.getElementById('noteContent').value,
-                color: document.querySelector('input[name="noteColor"]:checked').value,
-                updatedAt: Date.now()
-            };
-            notes = notes.filter(n => n.id !== id);
-            notes.push(note);
-            localStorage.setItem('arta_notes', JSON.stringify(notes));
-            updateFilter();
-            closeNoteModal();
+            saveToLocalStorage();
+            resetForm();
             renderNotes();
         }
 
+        // --- FITUR LIHAT CATATAN (DETAIL MODAL) ---
+        function viewNote(id) {
+            const note = notes.find(n => n.id === id);
+            if (!note) return;
+
+            document.getElementById('viewCategory').innerText = note.category;
+            document.getElementById('viewTitle').innerText = note.title;
+            document.getElementById('viewDate').innerText = 'Dibuat pada: ' + note.date;
+            document.getElementById('viewContent').innerText = note.content;
+
+            const viewImg = document.getElementById('viewImage');
+            if(note.image) {
+                viewImg.src = note.image;
+                viewImg.style.display = 'block';
+            } else {
+                viewImg.src = '';
+                viewImg.style.display = 'none';
+            }
+
+            document.getElementById('viewModal').classList.add('active');
+        }
+
+        function closeViewModal(event) {
+            const modal = document.getElementById('viewModal');
+            if(event.target === modal || event.target.className === 'text-modal-close') {
+                modal.classList.remove('active');
+            }
+        }
+
+        // --- EDIT CATATAN ---
+        function editNote(id) {
+            const note = notes.find(n => n.id === id);
+            if (!note) return;
+
+            document.getElementById('noteId').value = note.id;
+            document.getElementById('title').value = note.title;
+            document.getElementById('category').value = note.category;
+            document.getElementById('content').value = note.content;
+            document.getElementById('existingImage').value = note.image || '';
+            
+            document.getElementById('formTitle').innerText = 'Edit Catatan';
+            document.getElementById('submitBtn').innerText = 'Update Catatan';
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // --- HAPUS CATATAN ---
         function deleteNote(id) {
-            if(confirm("Hapus catatan ini?")) {
+            if(confirm('Apakah Anda yakin ingin menghapus catatan ini?')) {
                 notes = notes.filter(n => n.id !== id);
-                localStorage.setItem('arta_notes', JSON.stringify(notes));
-                updateFilter();
+                saveToLocalStorage();
                 renderNotes();
             }
         }
 
-        function updateFilter() {
-            const filter = document.getElementById('categoryFilter');
-            const currentVal = filter.value;
-            const categories = [...new Set(notes.map(n => n.category || 'Umum'))];
-            filter.innerHTML = '<option value="Semua">Semua Kategori</option>';
-            categories.forEach(c => filter.innerHTML += `<option value="${c}" ${c === currentVal ? 'selected' : ''}>${c}</option>`);
+        // --- FITUR PENCARIAN ---
+        function searchNotes() {
+            const searchText = document.getElementById('searchInput').value;
+            renderNotes(searchText);
         }
 
-        function renderNotes() {
-            const grid = document.getElementById('notesGrid');
-            const filter = document.getElementById('categoryFilter').value;
-            grid.innerHTML = '';
-            
-            const filtered = filter === 'Semua' ? notes : notes.filter(n => (n.category || 'Umum') === filter);
-
-            filtered.sort((a,b) => b.updatedAt - a.updatedAt).forEach(note => {
-                const card = document.createElement('div');
-                card.className = `note-${note.color} p-5 rounded-2xl relative border cursor-pointer hover:shadow-lg transition-all`;
-                card.innerHTML = `
-                    <div class="flex justify-end gap-2 mb-3">
-                        <button onclick="event.stopPropagation(); openNoteModal(${note.id})" class="bg-black/10 px-4 py-2 rounded-lg text-sm hover:bg-black/20"><i class="fa-solid fa-pen"></i></button>
-                        <button onclick="event.stopPropagation(); deleteNote(${note.id})" class="bg-red-500/20 px-4 py-2 rounded-lg text-sm hover:bg-red-500 hover:text-white"><i class="fa-solid fa-trash"></i></button>
-                    </div>
-                    <div class="text-[10px] font-bold uppercase opacity-70 tracking-widest">${note.category || 'Umum'}</div>
-                    <h3 class="font-bold text-xl mt-1">${note.title}</h3>
-                    <div class="mt-4 text-[10px] opacity-60 italic"><i class="fa-regular fa-clock"></i> ${formatDateTime(note.updatedAt)}</div>
-                `;
-                card.onclick = () => viewNote(note.id);
-                grid.appendChild(card);
-            });
+        // --- UTILITIES ---
+        function saveToLocalStorage() {
+            localStorage.setItem('nexus_notes', JSON.stringify(notes));
         }
 
-        updateFilter();
-        renderNotes();
+        function resetForm() {
+            noteForm.reset();
+            document.getElementById('noteId').value = '';
+            document.getElementById('existingImage').value = '';
+            document.getElementById('formTitle').innerText = 'Buat Catatan Baru';
+            document.getElementById('submitBtn').innerText = 'Simpan Catatan';
+        }
+
+        // --- MODAL PREVIEW GAMBAR FULLSCREEN ---
+        const imgModal = document.getElementById('imageModal');
+        const modalImgFull = document.getElementById('fullImage');
+
+        function openImageModal(imgSrc) {
+            imgModal.classList.add('active');
+            modalImgFull.src = imgSrc;
+        }
+
+        function closeImageModal(event) {
+            if(event.target.id === 'imageModal' || event.target.className === 'image-modal-close') {
+                imgModal.classList.remove('active');
+                setTimeout(() => { modalImgFull.src = ''; }, 300);
+            }
+        }
     </script>
-</bod
+</body>
+</html>
