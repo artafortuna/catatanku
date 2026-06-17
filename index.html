@@ -189,7 +189,7 @@
             font-weight: 700;
         }
 
-        input[type="text"], textarea {
+        input[type="text"], textarea, select {
             width: 100%;
             padding: 1rem;
             border-radius: 12px;
@@ -202,7 +202,7 @@
             transition: var(--transition);
         }
 
-        input[type="text"]:focus, textarea:focus {
+        input[type="text"]:focus, textarea:focus, select:focus {
             border-color: var(--accent-color);
             box-shadow: var(--shadow-cartoon);
         }
@@ -426,10 +426,30 @@
                         <label for="category">Kategori</label>
                         <input type="text" id="category" required placeholder="Contoh: Ide, Tugas...">
                     </div>
+                    
                     <div class="form-group">
+                        <label for="noteType">Tipe Catatan</label>
+                        <select id="noteType" onchange="toggleNoteTypeInput()">
+                            <option value="text">📄 Catatan Biasa</option>
+                            <option value="checklist">☑️ Catatan Checklist (Tugas)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="textContentFormGroup">
                         <label for="content">Isi Catatan</label>
                         <textarea id="content" required placeholder="Tulis cerita menarikku..."></textarea>
                     </div>
+
+                    <div class="form-group" id="checklistFormGroup" style="display: none;">
+                        <label>Daftar Checklist / Tugas</label>
+                        <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+                            <input type="text" id="newChecklistItem" placeholder="Tambah kegiatan baru..." onkeypress="handleChecklistEnter(event)">
+                            <button type="button" class="btn btn-primary" onclick="triggerAddChecklist()" style="padding: 0.5rem 1.2rem;">+</button>
+                        </div>
+                        <div id="checklistItemsContainer" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                            </div>
+                    </div>
+
                     <div class="form-group">
                         <label for="image">Lampirkan Foto (Opsional)</label>
                         <input type="file" id="image" accept="image/*" onchange="previewImage(event)">
@@ -452,7 +472,7 @@
                 <span id="viewCategory" class="note-category" style="margin-bottom: 1rem;"></span>
                 <h1 id="viewTitle" style="font-size: 2.5rem; margin-bottom: 0.5rem;"></h1>
                 <span id="viewDate" class="view-date"></span>
-                <p id="viewContent" class="view-content"></p>
+                <div id="viewContent" class="view-content"></div>
                 <img id="viewImage" class="view-image" style="display: none;" onclick="openImageModal(this.src)" alt="Lampiran">
             </div>
         </div>
@@ -587,10 +607,11 @@
 
             // Render terbalik (terbaru di atas)
             [...filteredNotes].reverse().forEach(note => {
+                const isChecklist = note.type === 'checklist';
                 const card = document.createElement('div');
                 card.className = 'note-card';
                 card.innerHTML = `
-                    <span class="note-category">${note.category}</span>
+                    <span class="note-category">${note.category} ${isChecklist ? '☑️' : '📄'}</span>
                     <h3 class="note-title">${note.title}</h3>
                     <div class="note-actions">
                         <button class="btn btn-primary" onclick="viewDetail(${note.id})">Baca</button>
@@ -612,9 +633,61 @@
             document.getElementById('noteForm').reset();
             document.getElementById('noteId').value = '';
             document.getElementById('existingImage').value = '';
+            document.getElementById('noteType').value = 'text';
+            document.getElementById('checklistItemsContainer').innerHTML = '';
+            toggleNoteTypeInput();
             removeImage(); // Sembunyikan preview
             document.getElementById('formTitle').innerText = 'Buat Catatan Baru';
             document.getElementById('submitBtn').innerText = 'Simpan Catatan';
+        }
+
+        // FITUR BARU: Handle tampilan tipe form input
+        function toggleNoteTypeInput() {
+            const type = document.getElementById('noteType').value;
+            const textGroup = document.getElementById('textContentFormGroup');
+            const checklistGroup = document.getElementById('checklistFormGroup');
+            
+            if (type === 'checklist') {
+                textGroup.style.display = 'none';
+                document.getElementById('content').removeAttribute('required');
+                checklistGroup.style.display = 'block';
+            } else {
+                textGroup.style.display = 'block';
+                document.getElementById('content').setAttribute('required', 'true');
+                checklistGroup.style.display = 'none';
+            }
+        }
+
+        // FITUR BARU: Manajemen Baris Checklist di Form
+        function addChecklistItemRow(text = '', checked = false) {
+            const container = document.getElementById('checklistItemsContainer');
+            const row = document.createElement('div');
+            row.className = 'checklist-form-row';
+            row.style.display = 'flex';
+            row.style.gap = '0.5rem';
+            row.style.alignItems = 'center';
+            
+            row.innerHTML = `
+                <input type="checkbox" class="chk-status" ${checked ? 'checked' : ''} style="width: 20px; height: 20px; cursor: pointer;">
+                <input type="text" class="chk-text" value="${text}" placeholder="Tulis kegiatan di sini..." required style="flex: 1; padding: 0.6rem 1rem; border: 2px solid var(--border-color); border-radius: 10px; background-color: var(--bg-color); color: var(--text-primary); font-weight: 600;">
+                <button type="button" class="btn btn-danger" onclick="this.parentElement.remove()" style="padding: 0.5rem 0.8rem; box-shadow: none;">🗑️</button>
+            `;
+            container.appendChild(row);
+        }
+
+        function triggerAddChecklist() {
+            const input = document.getElementById('newChecklistItem');
+            if (input.value.trim() !== '') {
+                addChecklistItemRow(input.value.trim(), false);
+                input.value = '';
+            }
+        }
+
+        function handleChecklistEnter(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                triggerAddChecklist();
+            }
         }
 
         function previewImage(event) {
@@ -630,7 +703,6 @@
             }
         }
 
-        // FITUR BARU: Hapus Gambar Data
         function removeImage() {
             document.getElementById('image').value = ''; // Bersihkan input file
             document.getElementById('existingImage').value = ''; // Bersihkan data existing
@@ -645,17 +717,31 @@
             const idInput = document.getElementById('noteId').value;
             const title = document.getElementById('title').value;
             const category = document.getElementById('category').value;
+            const noteType = document.getElementById('noteType').value;
             const content = document.getElementById('content').value;
             const imageFile = document.getElementById('image').files[0];
             const existingImage = document.getElementById('existingImage').value;
 
-            // Fungsi helper untuk menyimpan
+            // Proses data isi berdasarkan tipe catatan
+            let finalContent = content;
+            if (noteType === 'checklist') {
+                const rows = document.querySelectorAll('.checklist-form-row');
+                const items = [];
+                rows.forEach(row => {
+                    const text = row.querySelector('.chk-text').value;
+                    const checked = row.querySelector('.chk-status').checked;
+                    items.push({ text, checked });
+                });
+                finalContent = items; // Berupa Array Objek
+            }
+
             const proceedSave = async (imgBase64) => {
                 const noteData = {
                     id: idInput ? parseInt(idInput) : Date.now(),
                     title,
                     category,
-                    content,
+                    type: noteType,
+                    content: finalContent,
                     date: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }),
                     image: imgBase64
                 };
@@ -685,7 +771,58 @@
             document.getElementById('viewCategory').innerText = note.category;
             document.getElementById('viewTitle').innerText = note.title;
             document.getElementById('viewDate').innerText = 'Dibuat pada: ' + note.date;
-            document.getElementById('viewContent').innerText = note.content;
+
+            const viewContentEl = document.getElementById('viewContent');
+            viewContentEl.innerHTML = '';
+
+            // Render Interaktif jika tipenya Checklist
+            if (note.type === 'checklist' && Array.isArray(note.content)) {
+                note.content.forEach((item, index) => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.style.display = 'flex';
+                    itemDiv.style.alignItems = 'center';
+                    itemDiv.style.gap = '0.8rem';
+                    itemDiv.style.marginBottom = '0.8rem';
+                    
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.checked = item.checked;
+                    checkbox.style.width = '22px';
+                    checkbox.style.height = '22px';
+                    checkbox.style.cursor = 'pointer';
+                    
+                    const label = document.createElement('span');
+                    label.innerText = item.text;
+                    label.style.fontSize = '1.2rem';
+                    if (item.checked) {
+                        label.style.textDecoration = 'line-through';
+                        label.style.color = 'var(--text-secondary)';
+                    }
+
+                    // Aksi instan ketika kotak dicentang di halaman Baca Detail
+                    checkbox.onchange = async () => {
+                        item.checked = checkbox.checked;
+                        if (checkbox.checked) {
+                            label.style.textDecoration = 'line-through';
+                            label.style.color = 'var(--text-secondary)';
+                        } else {
+                            label.style.textDecoration = 'none';
+                            label.style.color = 'var(--text-primary)';
+                        }
+                        await saveNoteToDB(note); // Simpan otomatis statusnya
+                    };
+
+                    itemDiv.appendChild(checkbox);
+                    itemDiv.appendChild(label);
+                    viewContentEl.appendChild(itemDiv);
+                });
+            } else {
+                // Catatan Biasa (Text)
+                const p = document.createElement('p');
+                p.innerText = note.content;
+                p.style.whiteSpace = 'pre-wrap';
+                viewContentEl.appendChild(p);
+            }
 
             const viewImg = document.getElementById('viewImage');
             if(note.image) {
@@ -704,10 +841,23 @@
             const note = notesArray.find(n => n.id === id);
             if (!note) return;
 
+            resetForm();
+
             document.getElementById('noteId').value = note.id;
             document.getElementById('title').value = note.title;
             document.getElementById('category').value = note.category;
-            document.getElementById('content').value = note.content;
+            
+            const noteType = note.type || 'text';
+            document.getElementById('noteType').value = noteType;
+            toggleNoteTypeInput();
+
+            if (noteType === 'checklist' && Array.isArray(note.content)) {
+                note.content.forEach(item => {
+                    addChecklistItemRow(item.text, item.checked);
+                });
+            } else {
+                document.getElementById('content').value = note.content;
+            }
             
             // Handle image edit
             if(note.image) {
