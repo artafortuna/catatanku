@@ -1,21 +1,40 @@
-// --- SETUP MULTI-HALAMAN ---
+// --- SETUP MULTI-HALAMAN & ROUTING NATIVE (HISTORY API) ---
 const pages = {
     home: document.getElementById('pageHome'),
     form: document.getElementById('pageForm'),
     detail: document.getElementById('pageDetail')
 };
 
-function showPage(pageName) {
+// Parameter pushToHistory mencegah loop saat tombol 'back' HP ditekan
+function showPage(pageName, pushToHistory = true) {
     Object.values(pages).forEach(page => page.style.display = 'none');
     pages[pageName].style.display = 'block';
     window.scrollTo(0, 0);
     
     // Tampilkan search bar hanya di home
     document.getElementById('searchInput').style.display = (pageName === 'home') ? 'block' : 'none';
+
+    // Integrasi native routing (History API)
+    if (pushToHistory) {
+        const currentState = history.state?.page;
+        if (currentState !== pageName) {
+            history.pushState({ page: pageName }, '', `#${pageName}`);
+        }
+    }
 }
 
+// Menangkap event tombol "Back/Kembali" dari sistem operasi (Android/iOS) atau Browser
+window.addEventListener('popstate', (event) => {
+    if (event.state && event.state.page) {
+        showPage(event.state.page, false);
+    } else {
+        // Fallback default ke home jika tidak ada riwayat yang terbaca
+        showPage('home', false);
+    }
+});
+
+
 // --- CUSTOM DIALOG (PENGGANTI ALERT & CONFIRM BAWAAN) ---
-// Ditulis dengan Promise agar proses eksekusi bisa ditunda (await) layaknya fungsi asli browser
 function showDialog(message, isConfirm = false) {
     return new Promise((resolve) => {
         const overlay = document.getElementById('customDialog');
@@ -26,43 +45,39 @@ function showDialog(message, isConfirm = false) {
         msgEl.innerText = message;
         overlay.style.display = 'flex';
         
-        // Sembunyikan tombol batal jika ini hanya Alert biasa
         btnCancel.style.display = isConfirm ? 'inline-block' : 'none';
 
         btnOk.onclick = () => {
             overlay.style.display = 'none';
-            resolve(true); // User klik OK
+            resolve(true); 
         };
 
         btnCancel.onclick = () => {
             overlay.style.display = 'none';
-            resolve(false); // User klik Batal
+            resolve(false); 
         };
     });
 }
 
 // --- INDEXED DB SETUP ---
-// MENGGUNAKAN NAMA DB LAMA AGAR DATA TIDAK HILANG
 const dbName = "ArtaNotesCartoonDB"; 
 let db;
 let notesArray = []; 
+let currentViewedNote = null; // Menyimpan data catatan yang sedang dibaca
 
 function initDB() {
     return new Promise((resolve, reject) => {
         const request = indexedDB.open(dbName, 1);
-        
         request.onupgradeneeded = (event) => {
             db = event.target.result;
             if (!db.objectStoreNames.contains("notes")) {
                 db.createObjectStore("notes", { keyPath: "id" });
             }
         };
-        
         request.onsuccess = (event) => {
             db = event.target.result;
             resolve(db);
         };
-        
         request.onerror = (event) => reject("Error opening DB: " + event.target.errorCode);
     });
 }
@@ -104,7 +119,10 @@ window.onload = async () => {
     applySavedTheme();
     await initDB();
     await loadNotes();
-    showPage('home');
+    
+    // Set awal routing (Home) agar fungsi back tidak langsung keluar web
+    history.replaceState({ page: 'home' }, '', '#home');
+    showPage('home', false);
 };
 
 // --- MANAJEMEN TEMA ---
@@ -193,13 +211,12 @@ function toggleNoteTypeInput() {
     }
 }
 
-// Elemen di-render secara dinamis dengan ukuran (padding/gap/font) yang lebih presisi
 function addChecklistItemRow(text = '', checked = false) {
     const container = document.getElementById('checklistItemsContainer');
     const row = document.createElement('div');
     row.className = 'checklist-form-row';
     row.style.display = 'flex';
-    row.style.gap = '0.4rem'; // Lebih rapat
+    row.style.gap = '0.4rem';
     row.style.alignItems = 'center';
     
     row.innerHTML = `
@@ -267,12 +284,10 @@ document.getElementById('noteForm').addEventListener('submit', async function(e)
             items.push({ text, checked });
         });
         
-        // Peringatan menggunakan Custom Dialog
         if(items.length === 0) {
             await showDialog('Daftar checklist tidak boleh kosong!', false);
             return;
         }
-        
         finalContent = items;
     }
 
@@ -289,9 +304,7 @@ document.getElementById('noteForm').addEventListener('submit', async function(e)
 
         await saveNoteToDB(noteData);
         await loadNotes(); 
-        showPage('home');
-        
-        // Tampilkan Custom Dialog Alert sukses menyimpan!
+        history.back(); // Kembali secara native setelah save
         await showDialog('Catatan berhasil disimpan! 🌊', false);
     };
 
@@ -306,10 +319,12 @@ document.getElementById('noteForm').addEventListener('submit', async function(e)
     }
 });
 
-// --- HALAMAN DETAIL ---
+// --- HALAMAN DETAIL & FITUR COPY ---
 function viewDetail(id) {
     const note = notesArray.find(n => n.id === id);
     if (!note) return;
+    
+    currentViewedNote = note; // Disimpan global untuk fitur Copy
 
     document.getElementById('viewCategory').innerText = note.category;
     document.getElementById('viewTitle').innerText = note.title;
@@ -378,6 +393,28 @@ function viewDetail(id) {
     showPage('detail');
 }
 
+// Fungsi Menyalin Catatan secara Elegan
+async function copyNote() {
+    if (!currentViewedNote) return;
+
+    let textToCopy = `${currentViewedNote.title}\nKategori: ${currentViewedNote.category}\n---\n`;
+
+    if (currentViewedNote.type === 'checklist' && Array.isArray(currentViewedNote.content)) {
+        currentViewedNote.content.forEach(item => {
+            textToCopy += `${item.checked ? '[v]' : '[ ]'} ${item.text}\n`;
+        });
+    } else {
+        textToCopy += currentViewedNote.content;
+    }
+
+    try {
+        await navigator.clipboard.writeText(textToCopy);
+        await showDialog('Catatan berhasil disalin! 📋', false);
+    } catch (err) {
+        await showDialog('Oops, gagal menyalin catatan.', false);
+    }
+}
+
 // --- EDIT CATATAN ---
 function editNote(id) {
     const note = notesArray.find(n => n.id === id);
@@ -417,9 +454,7 @@ function editNote(id) {
 
 // --- HAPUS CATATAN ---
 async function deleteNote(id) {
-    // Memanggil Custom Dialog (isConfirm: true) lalu menunggu (await) respon pengguna 
     const isConfirmed = await showDialog('Yakin ingin menghapus catatan ini? 🌊', true);
-    
     if(isConfirmed) {
         await deleteNoteFromDB(id);
         await loadNotes();
