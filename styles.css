@@ -1,35 +1,43 @@
-/* --- CSS VARIABLES (TEMA PANTAI MODERN & NEON) --- */
+/* --- CSS VARIABLES (TEMA PANTAI MODERN, NEON & BACKGROUND) --- */
 :root {
-    --bg-color: #f0f8ff; /* Pasir putih / Biru awan sangat muda */
-    --surface-color: #ffffff;
-    --text-primary: #003049; /* Biru laut dalam */
+    /* Latar belakang gambar pantai cerah */
+    --bg-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');
+    
+    /* Warna permukaan dibuat 92% solid agar teks mudah dibaca (frosted/kaca) */
+    --surface-color: rgba(255, 255, 255, 0.92);
+    --bg-color-solid: #f0f8ff; /* Untuk elemen input yg butuh background pekat */
+    
+    --text-primary: #003049; 
     --text-secondary: #00507a;
-    --accent-color: #00b4d8; /* Biru laut cerah */
+    --accent-color: #00b4d8; 
     --accent-hover: #0077b6;
-    --danger-color: #ef476f; /* Coral sunset */
-    --danger-hover: #d90429;
+    --danger-color: #ef476f; 
+    
     --border-color: #90e0ef; 
     
     /* Efek Glow Terang */
-    --glow-color: rgba(0, 180, 216, 0.4);
+    --glow-color: rgba(0, 180, 216, 0.5);
     --glow-danger: rgba(239, 71, 111, 0.5);
     
-    --radius: 16px;
-    --transition: all 0.3s ease-in-out;
+    --radius: 12px; /* Lebih kotak/profesional dibanding 16px */
+    --transition: all 0.25s ease-in-out;
 }
 
 /* TEMA GELAP (BIOLUMINESENSI LAUT MALAM) */
 [data-theme="dark"] {
-    --bg-color: #0b132b; /* Laut malam */
-    --surface-color: #1c2541;
+    /* Latar belakang gambar pantai malam/gelap */
+    --bg-image: url('https://images.unsplash.com/photo-1534214526114-0ea4d47b04f2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');
+    
+    --surface-color: rgba(28, 37, 65, 0.92);
+    --bg-color-solid: #0b132b;
+    
     --text-primary: #e0fbfc;
     --text-secondary: #98c1d9;
-    --accent-color: #00f5d4; /* Neon turquoise / Cyan */
-    --accent-hover: #00bbf9;
-    --danger-color: #ff006e; /* Neon pink/coral */
+    --accent-color: #00f5d4; 
+    --danger-color: #ff006e; 
     --border-color: #00f5d4;
     
-    /* Efek Glow Gelap (Lebih menyala) */
+    /* Efek Glow Gelap */
     --glow-color: rgba(0, 245, 212, 0.6);
     --glow-danger: rgba(255, 0, 110, 0.6);
 }
@@ -45,42 +53,47 @@
 h1, h2, h3, .nav-brand {
     font-family: 'Poppins', sans-serif;
     color: var(--text-primary);
+    line-height: 1.2;
 }
 
 body {
-    background-color: var(--bg-color);
+    background-image: var(--bg-image);
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed; /* Latar belakang diam saat discroll */
     color: var(--text-primary);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    transition: background-color 0.3s, color 0.3s;
+    transition: color 0.3s, background-image 0.5s;
 }
 
 /* --- EFEK GLOW (NEON) --- */
 .glow-effect {
     border: 2px solid var(--accent-color);
-    box-shadow: 0 0 10px var(--glow-color);
+    box-shadow: 0 0 8px var(--glow-color);
     transition: var(--transition);
 }
 
 .glow-effect:hover {
-    box-shadow: 0 0 20px var(--glow-color), inset 0 0 10px var(--glow-color);
-    transform: translateY(-2px);
+    box-shadow: 0 0 15px var(--glow-color), inset 0 0 5px var(--glow-color);
+    transform: translateY(-1px);
 }
 
 .glow-border {
-    border: 2px solid var(--accent-color);
-    box-shadow: 0 0 15px var(--glow-color);
+    border: 1px solid var(--accent-color);
+    box-shadow: 0 0 10px var(--glow-color);
+    backdrop-filter: blur(5px); /* Efek blur pada background di belakangnya */
 }
 
 .glow-input {
     width: 100%;
-    padding: 1rem;
-    border-radius: 12px;
-    border: 2px solid var(--border-color);
-    background-color: var(--bg-color);
+    padding: 0.6rem 0.8rem; /* Lebih rapat */
+    border-radius: 8px; /* Lebih presisi */
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-color-solid);
     color: var(--text-primary);
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: 600;
     outline: none;
     transition: var(--transition);
@@ -88,18 +101,18 @@ body {
 
 .glow-input:focus {
     border-color: var(--accent-color);
-    box-shadow: 0 0 15px var(--glow-color);
+    box-shadow: 0 0 10px var(--glow-color);
 }
 
 textarea.glow-input {
     resize: vertical;
-    min-height: 150px;
+    min-height: 120px; /* Sedikit lebih kecil */
 }
 
 /* --- NAVBAR --- */
 nav {
     background-color: var(--surface-color);
-    padding: 1rem 2rem;
+    padding: 0.8rem 1.5rem; /* Lebih rapat */
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -107,92 +120,92 @@ nav {
     top: 0;
     z-index: 100;
     border-bottom: 2px solid var(--accent-color);
-    box-shadow: 0 4px 15px var(--glow-color);
-    transition: var(--transition);
+    box-shadow: 0 4px 10px var(--glow-color);
+    backdrop-filter: blur(8px);
 }
 
 .nav-brand-container {
     display: flex;
     align-items: center;
-    gap: 0.8rem;
+    gap: 0.6rem;
     cursor: pointer;
 }
 
+/* Logo Persegi Melengkung */
 .logo-img {
-    width: 40px; 
-    height: 40px; 
-    border-radius: 50%; 
+    width: 32px; 
+    height: 32px; 
+    border-radius: 8px; /* Persegi melengkung / rounded rectangle */
     border: 2px solid var(--accent-color); 
     object-fit: cover;
-    box-shadow: 0 0 10px var(--glow-color);
+    box-shadow: 0 0 8px var(--glow-color);
 }
 
 .nav-brand {
-    font-size: 1.6rem;
+    font-size: 1.3rem;
     font-weight: 700;
-    letter-spacing: 2px;
+    letter-spacing: 1px;
     text-transform: uppercase;
-    text-shadow: 0 0 8px var(--glow-color);
+    text-shadow: 0 0 5px var(--glow-color);
 }
 
 .nav-controls {
     display: flex;
-    gap: 1rem;
+    gap: 0.8rem;
     align-items: center;
 }
 
 .search-bar {
-    padding: 0.6rem 1.2rem;
-    border-radius: 50px;
-    border: 2px solid var(--border-color);
-    background-color: var(--bg-color);
+    padding: 0.5rem 1rem;
+    border-radius: 8px; /* Dibuat presisi (bukan bulat penuh) */
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-color-solid);
     color: var(--text-primary);
-    width: 250px;
+    width: 220px;
     outline: none;
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-weight: 600;
     transition: var(--transition);
 }
 
 .search-bar:focus {
     border-color: var(--accent-color);
-    box-shadow: 0 0 15px var(--glow-color);
+    box-shadow: 0 0 10px var(--glow-color);
 }
 
 .theme-toggle {
-    background-color: var(--surface-color);
+    background-color: var(--bg-color-solid);
     border: 2px solid var(--accent-color);
     cursor: pointer;
-    padding: 0.6rem;
-    border-radius: 50%;
+    padding: 0.4rem;
+    border-radius: 8px; /* Disesuaikan kotak melengkung */
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--text-primary);
-    box-shadow: 0 0 10px var(--glow-color);
+    box-shadow: 0 0 8px var(--glow-color);
     transition: var(--transition);
 }
 
 .theme-toggle:hover {
-    box-shadow: 0 0 20px var(--glow-color), inset 0 0 10px var(--glow-color);
-    transform: rotate(15deg);
+    box-shadow: 0 0 15px var(--glow-color);
 }
 
 /* --- MAIN CONTAINER --- */
 main {
     flex: 1;
     width: 100%;
-    max-width: 1100px;
-    margin: 2rem auto;
-    padding: 0 2rem;
+    max-width: 1000px;
+    margin: 1.5rem auto;
+    padding: 0 1.5rem;
 }
 
 /* --- BUTTONS --- */
 .btn {
-    padding: 0.8rem 1.5rem;
-    border-radius: 12px;
-    font-weight: 700;
-    font-size: 1rem;
+    padding: 0.6rem 1.2rem; /* Spasi dikurangi agar presisi */
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
     cursor: pointer;
     text-align: center;
 }
@@ -200,14 +213,12 @@ main {
 .btn-primary {
     background-color: var(--accent-color);
     color: #fff;
-    border: none; /* Border ditangani oleh glow-effect */
+    border: none; 
 }
-[data-theme="dark"] .btn-primary {
-    color: #000; /* Agar teks terbaca di warna neon */
-}
+[data-theme="dark"] .btn-primary { color: #000; }
 
 .btn-secondary {
-    background-color: var(--surface-color);
+    background-color: var(--bg-color-solid);
     color: var(--text-primary);
 }
 
@@ -215,60 +226,58 @@ main {
     background-color: var(--danger-color);
     color: white;
     border: 2px solid var(--danger-color) !important;
-    box-shadow: 0 0 10px var(--glow-danger) !important;
+    box-shadow: 0 0 8px var(--glow-danger) !important;
 }
-
 .btn-danger:hover {
-    box-shadow: 0 0 20px var(--glow-danger), inset 0 0 10px var(--glow-danger) !important;
+    box-shadow: 0 0 15px var(--glow-danger) !important;
 }
 
 /* --- FORM SECTION --- */
 .form-section {
     background-color: var(--surface-color);
-    padding: 2.5rem;
+    padding: 1.8rem;
     border-radius: var(--radius);
 }
 
 .form-group {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem; /* Jarak antar input dipersempit */
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 0.5rem;
-    font-size: 1.1rem;
+    margin-bottom: 0.3rem;
+    font-size: 0.95rem;
     color: var(--text-primary);
     font-weight: 700;
 }
 
 .file-input {
-    padding: 0.8rem;
+    padding: 0.5rem;
     cursor: pointer;
 }
 
 .image-preview-box {
-    margin-top: 1rem;
-    padding: 1rem;
-    border-radius: 12px;
-    background-color: var(--bg-color);
+    margin-top: 0.8rem;
+    padding: 0.8rem;
+    border-radius: 8px;
+    background-color: var(--bg-color-solid);
     text-align: center;
 }
 
 .image-preview-box img {
     max-width: 100%;
-    max-height: 200px;
-    border-radius: 8px;
+    max-height: 150px; /* Mengecilkan ukuran preview foto */
+    border-radius: 6px;
     border: 2px solid var(--accent-color);
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
     object-fit: cover;
-    box-shadow: 0 0 10px var(--glow-color);
 }
 
 .submit-btn {
     width: 100%; 
-    font-size: 1.2rem; 
-    padding: 1rem;
-    margin-top: 1rem;
+    font-size: 1.1rem; 
+    padding: 0.8rem;
+    margin-top: 0.5rem;
 }
 
 /* --- NOTES GRID --- */
@@ -276,99 +285,106 @@ main {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 2rem;
+    margin-bottom: 1.2rem; /* Dipersempit */
+    background: var(--surface-color);
+    padding: 0.8rem 1.2rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--accent-color);
+    backdrop-filter: blur(5px);
+    box-shadow: 0 0 10px var(--glow-color);
 }
 
 .notes-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.2rem; /* Jarak antar kartu dikurangi */
 }
 
 .note-card {
     background-color: var(--surface-color);
     border-radius: var(--radius);
-    padding: 1.8rem;
-    border: 2px solid var(--border-color);
+    padding: 1.2rem; /* Padding dirapatkan */
+    border: 1px solid var(--border-color);
     transition: var(--transition);
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 0.8rem;
     position: relative;
-    overflow: hidden;
+    backdrop-filter: blur(5px);
 }
 
 .note-card:hover {
-    transform: translateY(-8px);
+    transform: translateY(-4px);
     border-color: var(--accent-color);
-    box-shadow: 0 10px 25px var(--glow-color);
+    box-shadow: 0 6px 20px var(--glow-color);
 }
 
 .note-category {
     display: inline-block;
-    font-size: 0.85rem;
-    padding: 0.5rem 1.2rem;
+    font-size: 0.75rem;
+    padding: 0.3rem 0.8rem;
     background-color: var(--accent-color);
     color: #fff;
-    border-radius: 50px;
+    border-radius: 4px; /* Sudut lebih profesional */
     font-family: 'Poppins', sans-serif;
     font-weight: 600;
     align-self: flex-start;
-    box-shadow: 0 0 10px var(--glow-color);
+    box-shadow: 0 0 5px var(--glow-color);
 }
 [data-theme="dark"] .note-category { color: #000; }
 
 .note-title {
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     word-wrap: break-word;
 }
 
 .note-actions {
     display: flex;
-    gap: 0.8rem;
+    gap: 0.5rem;
     margin-top: auto;
-    padding-top: 1rem;
+    padding-top: 0.8rem;
 }
 
 .note-actions button {
     flex: 1;
-    padding: 0.6rem;
-    font-size: 0.9rem;
+    padding: 0.5rem;
+    font-size: 0.85rem;
 }
 
 /* --- PAGE DETAIL --- */
 .detail-container {
     background-color: var(--surface-color);
-    padding: 3rem;
+    padding: 2rem;
     border-radius: var(--radius);
+    backdrop-filter: blur(5px);
 }
 
 .view-date {
-    font-size: 1rem;
+    font-size: 0.9rem;
     color: var(--text-secondary);
     display: block;
-    margin-bottom: 2rem;
+    margin-bottom: 1.2rem;
     font-weight: 600;
-    border-bottom: 2px dashed var(--accent-color);
-    padding-bottom: 1rem;
+    border-bottom: 1px dashed var(--accent-color);
+    padding-bottom: 0.8rem;
 }
 
 .view-content {
-    font-size: 1.15rem;
-    line-height: 1.8;
+    font-size: 1.05rem;
+    line-height: 1.6;
     color: var(--text-primary);
     white-space: pre-wrap;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
     font-weight: 500;
 }
 
 .view-image {
     width: 100%;
-    max-height: 450px;
-    border-radius: 12px;
+    max-height: 350px;
+    border-radius: 8px;
     object-fit: cover;
     cursor: zoom-in;
-    margin-top: 1rem;
+    margin-top: 0.5rem;
 }
 
 /* --- MODAL FULLSCREEN IMAGE --- */
@@ -377,45 +393,47 @@ main {
     position: fixed;
     z-index: 1010;
     top: 0; left: 0; width: 100%; height: 100%;
-    background-color: rgba(0, 15, 30, 0.9); /* Biru gelap transparan */
+    background-color: rgba(0, 15, 30, 0.9);
     align-items: center; justify-content: center;
-    backdrop-filter: blur(5px);
+    backdrop-filter: blur(8px);
 }
-
 #imageModal.active { display: flex; }
 
 .image-modal-content {
     max-width: 90%; 
     max-height: 90vh;
-    border-radius: 16px;
+    border-radius: 12px;
 }
 
 .image-modal-close {
     position: absolute; top: 20px; right: 30px;
     color: var(--accent-color); 
-    font-size: 45px; 
+    font-size: 40px; 
     font-weight: bold;
     cursor: pointer; 
     transition: var(--transition);
-    text-shadow: 0 0 15px var(--glow-color);
+    text-shadow: 0 0 10px var(--glow-color);
 }
 .image-modal-close:hover { color: #fff; }
 
 /* --- FOOTER --- */
 footer {
     text-align: center;
-    padding: 2rem;
+    padding: 1.2rem;
     margin-top: auto;
     color: var(--text-secondary);
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-weight: 600;
-    border-top: 2px solid var(--border-color);
     background-color: var(--surface-color);
+    border-top: 2px solid var(--accent-color);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 -4px 10px var(--glow-color);
 }
 
 /* --- RESPONSIVE --- */
 @media (max-width: 768px) {
-    .search-bar { width: 160px; }
-    .detail-container { padding: 1.5rem; }
+    .search-bar { width: 140px; }
+    .detail-container { padding: 1.2rem; }
     .notes-grid { grid-template-columns: 1fr; }
+    .page-header { flex-direction: column; gap: 0.8rem; align-items: flex-start; }
 }
