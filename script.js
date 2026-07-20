@@ -14,11 +14,38 @@ function showPage(pageName) {
     document.getElementById('searchInput').style.display = (pageName === 'home') ? 'block' : 'none';
 }
 
+// --- CUSTOM DIALOG (PENGGANTI ALERT & CONFIRM BAWAAN) ---
+// Ditulis dengan Promise agar proses eksekusi bisa ditunda (await) layaknya fungsi asli browser
+function showDialog(message, isConfirm = false) {
+    return new Promise((resolve) => {
+        const overlay = document.getElementById('customDialog');
+        const msgEl = document.getElementById('dialogMessage');
+        const btnCancel = document.getElementById('btnDialogCancel');
+        const btnOk = document.getElementById('btnDialogOk');
+
+        msgEl.innerText = message;
+        overlay.style.display = 'flex';
+        
+        // Sembunyikan tombol batal jika ini hanya Alert biasa
+        btnCancel.style.display = isConfirm ? 'inline-block' : 'none';
+
+        btnOk.onclick = () => {
+            overlay.style.display = 'none';
+            resolve(true); // User klik OK
+        };
+
+        btnCancel.onclick = () => {
+            overlay.style.display = 'none';
+            resolve(false); // User klik Batal
+        };
+    });
+}
+
 // --- INDEXED DB SETUP ---
 // MENGGUNAKAN NAMA DB LAMA AGAR DATA TIDAK HILANG
 const dbName = "ArtaNotesCartoonDB"; 
 let db;
-let notesArray = []; // State untuk dirender di UI
+let notesArray = []; 
 
 function initDB() {
     return new Promise((resolve, reject) => {
@@ -90,7 +117,6 @@ function toggleTheme() {
 }
 
 function applySavedTheme() {
-    // Membaca tema dari localstorage
     const savedTheme = localStorage.getItem('arta_ocean_theme') || 'light';
     document.documentElement.setAttribute('data-theme', savedTheme);
     updateThemeIcon(savedTheme);
@@ -112,11 +138,10 @@ function renderNotes(filterText = '') {
     );
 
     if(filteredNotes.length === 0) {
-        container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 2.5rem; background: var(--surface-color); border: 1px dashed var(--accent-color); border-radius: 12px; box-shadow: 0 0 10px var(--glow-color); backdrop-filter: blur(5px);"><h3>Belum ada catatan di pinggir pantai ini! 🌊</h3></div>';
+        container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 2rem; background: var(--surface-color); border: 1px dashed var(--accent-color); border-radius: var(--radius); box-shadow: 0 0 8px var(--glow-color); backdrop-filter: blur(5px);"><h3>Belum ada catatan di pinggir pantai ini! 🌊</h3></div>';
         return;
     }
 
-    // Render terbalik (terbaru di atas)
     [...filteredNotes].reverse().forEach(note => {
         const isChecklist = note.type === 'checklist';
         const card = document.createElement('div');
@@ -147,7 +172,7 @@ function resetForm() {
     document.getElementById('noteType').value = 'text';
     document.getElementById('checklistItemsContainer').innerHTML = '';
     toggleNoteTypeInput();
-    removeImage(); // Sembunyikan preview
+    removeImage(); 
     document.getElementById('formTitle').innerText = 'Buat Catatan Baru';
     document.getElementById('submitBtn').innerText = 'Simpan Catatan';
 }
@@ -168,18 +193,19 @@ function toggleNoteTypeInput() {
     }
 }
 
+// Elemen di-render secara dinamis dengan ukuran (padding/gap/font) yang lebih presisi
 function addChecklistItemRow(text = '', checked = false) {
     const container = document.getElementById('checklistItemsContainer');
     const row = document.createElement('div');
     row.className = 'checklist-form-row';
     row.style.display = 'flex';
-    row.style.gap = '0.5rem';
+    row.style.gap = '0.4rem'; // Lebih rapat
     row.style.alignItems = 'center';
     
     row.innerHTML = `
-        <input type="checkbox" class="chk-status" ${checked ? 'checked' : ''} style="width: 20px; height: 20px; cursor: pointer; accent-color: var(--accent-color);">
-        <input type="text" class="chk-text glow-input" value="${text}" placeholder="Tulis kegiatan di sini..." required style="flex: 1; padding: 0.5rem 0.8rem; font-size: 0.95rem;">
-        <button type="button" class="btn btn-danger glow-effect" onclick="this.parentElement.remove()" style="padding: 0.4rem 0.8rem; box-shadow: none;">🗑️</button>
+        <input type="checkbox" class="chk-status" ${checked ? 'checked' : ''} style="width: 18px; height: 18px; cursor: pointer; accent-color: var(--accent-color);">
+        <input type="text" class="chk-text glow-input" value="${text}" placeholder="Tulis kegiatan di sini..." required style="flex: 1; padding: 0.4rem 0.6rem; font-size: 0.85rem;">
+        <button type="button" class="btn btn-danger glow-effect" onclick="this.parentElement.remove()" style="padding: 0.3rem 0.6rem; box-shadow: none;">🗑️</button>
     `;
     container.appendChild(row);
 }
@@ -240,6 +266,13 @@ document.getElementById('noteForm').addEventListener('submit', async function(e)
             const checked = row.querySelector('.chk-status').checked;
             items.push({ text, checked });
         });
+        
+        // Peringatan menggunakan Custom Dialog
+        if(items.length === 0) {
+            await showDialog('Daftar checklist tidak boleh kosong!', false);
+            return;
+        }
+        
         finalContent = items;
     }
 
@@ -257,6 +290,9 @@ document.getElementById('noteForm').addEventListener('submit', async function(e)
         await saveNoteToDB(noteData);
         await loadNotes(); 
         showPage('home');
+        
+        // Tampilkan Custom Dialog Alert sukses menyimpan!
+        await showDialog('Catatan berhasil disimpan! 🌊', false);
     };
 
     if (imageFile) {
@@ -287,20 +323,20 @@ function viewDetail(id) {
             const itemDiv = document.createElement('div');
             itemDiv.style.display = 'flex';
             itemDiv.style.alignItems = 'center';
-            itemDiv.style.gap = '0.8rem';
-            itemDiv.style.marginBottom = '0.6rem';
+            itemDiv.style.gap = '0.5rem';
+            itemDiv.style.marginBottom = '0.4rem';
             
             const checkbox = document.createElement('input');
             checkbox.type = 'checkbox';
             checkbox.checked = item.checked;
-            checkbox.style.width = '20px';
-            checkbox.style.height = '20px';
+            checkbox.style.width = '18px';
+            checkbox.style.height = '18px';
             checkbox.style.cursor = 'pointer';
             checkbox.style.accentColor = 'var(--accent-color)';
             
             const label = document.createElement('span');
             label.innerText = item.text;
-            label.style.fontSize = '1.05rem';
+            label.style.fontSize = '0.95rem';
             
             if (item.checked) {
                 label.style.textDecoration = 'line-through';
@@ -381,7 +417,10 @@ function editNote(id) {
 
 // --- HAPUS CATATAN ---
 async function deleteNote(id) {
-    if(confirm('Yakin ingin menghapus catatan ini? 🌊')) {
+    // Memanggil Custom Dialog (isConfirm: true) lalu menunggu (await) respon pengguna 
+    const isConfirmed = await showDialog('Yakin ingin menghapus catatan ini? 🌊', true);
+    
+    if(isConfirmed) {
         await deleteNoteFromDB(id);
         await loadNotes();
     }
@@ -405,6 +444,6 @@ function openImageModal(imgSrc) {
 function closeImageModal(event) {
     if(event.target.id === 'imageModal' || event.target.className === 'image-modal-close') {
         imgModal.classList.remove('active');
-        setTimeout(() => { modalImgFull.src = ''; }, 300);
+        setTimeout(() => { modalImgFull.src = ''; }, 200);
     }
 }
