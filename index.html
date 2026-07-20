@@ -33,7 +33,7 @@
         <div id="pageHome">
             <div class="page-header">
                 <h2>Catatan Saya</h2>
-                <button class="btn btn-primary glow-effect" onclick="openForm()">+ Buat Baru</button>
+                <button class="btn btn-primary glow-effect" onclick="showPage('form')">+ Buat Baru</button>
             </div>
             <section class="notes-grid" id="notesContainer">
                 <!-- Catatan akan dirender di sini -->
@@ -42,7 +42,8 @@
 
         <!-- HALAMAN FORM -->
         <div id="pageForm" style="display: none;">
-            <button class="btn btn-secondary glow-effect" onclick="showPage('home')" style="margin-bottom: 0.8rem;">&larr; Kembali</button>
+            <!-- Menggunakan history.back() agar sinkron dengan routing bawaan HP -->
+            <button class="btn btn-secondary glow-effect" onclick="history.back()" style="margin-bottom: 0.8rem;">&larr; Kembali</button>
             <aside class="form-section glow-border">
                 <h2 id="formTitle" style="margin-bottom: 1rem;">Buat Catatan Baru</h2>
                 <form id="noteForm">
@@ -101,9 +102,18 @@
 
         <!-- HALAMAN DETAIL (BACA CATATAN) -->
         <div id="pageDetail" style="display: none;">
-            <button class="btn btn-secondary glow-effect" onclick="showPage('home')" style="margin-bottom: 0.8rem;">&larr; Kembali</button>
+            <!-- Tombol Kembali dihapus (menggunakan fitur Back Bawaan HP) -->
             <div class="detail-container glow-border">
-                <span id="viewCategory" class="note-category"></span>
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+                    <span id="viewCategory" class="note-category"></span>
+                    <!-- Tombol Salin (Copy Icon Only) -->
+                    <button class="copy-btn" onclick="copyNote()" title="Salin Catatan">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                        </svg>
+                    </button>
+                </div>
                 <h1 id="viewTitle" style="margin-bottom: 0.3rem;"></h1>
                 <span id="viewDate" class="view-date"></span>
                 <div id="viewContent" class="view-content"></div>
