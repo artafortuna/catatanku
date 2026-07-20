@@ -112,7 +112,7 @@ function renderNotes(filterText = '') {
     );
 
     if(filteredNotes.length === 0) {
-        container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 3rem; border: 2px dashed var(--accent-color); border-radius: 20px; box-shadow: 0 0 15px var(--glow-color);"><h3>Belum ada catatan di pinggir pantai ini! 🌊</h3></div>';
+        container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 2.5rem; background: var(--surface-color); border: 1px dashed var(--accent-color); border-radius: 12px; box-shadow: 0 0 10px var(--glow-color); backdrop-filter: blur(5px);"><h3>Belum ada catatan di pinggir pantai ini! 🌊</h3></div>';
         return;
     }
 
@@ -177,9 +177,9 @@ function addChecklistItemRow(text = '', checked = false) {
     row.style.alignItems = 'center';
     
     row.innerHTML = `
-        <input type="checkbox" class="chk-status" ${checked ? 'checked' : ''} style="width: 22px; height: 22px; cursor: pointer; accent-color: var(--accent-color);">
-        <input type="text" class="chk-text glow-input" value="${text}" placeholder="Tulis kegiatan di sini..." required style="flex: 1; padding: 0.6rem 1rem;">
-        <button type="button" class="btn btn-danger glow-effect" onclick="this.parentElement.remove()" style="padding: 0.5rem 0.8rem; box-shadow: none;">🗑️</button>
+        <input type="checkbox" class="chk-status" ${checked ? 'checked' : ''} style="width: 20px; height: 20px; cursor: pointer; accent-color: var(--accent-color);">
+        <input type="text" class="chk-text glow-input" value="${text}" placeholder="Tulis kegiatan di sini..." required style="flex: 1; padding: 0.5rem 0.8rem; font-size: 0.95rem;">
+        <button type="button" class="btn btn-danger glow-effect" onclick="this.parentElement.remove()" style="padding: 0.4rem 0.8rem; box-shadow: none;">🗑️</button>
     `;
     container.appendChild(row);
 }
@@ -288,19 +288,19 @@ function viewDetail(id) {
             itemDiv.style.display = 'flex';
             itemDiv.style.alignItems = 'center';
             itemDiv.style.gap = '0.8rem';
-            itemDiv.style.marginBottom = '0.8rem';
+            itemDiv.style.marginBottom = '0.6rem';
             
             const checkbox = document.createElement('input');
             checkbox.type = 'checkbox';
             checkbox.checked = item.checked;
-            checkbox.style.width = '22px';
-            checkbox.style.height = '22px';
+            checkbox.style.width = '20px';
+            checkbox.style.height = '20px';
             checkbox.style.cursor = 'pointer';
             checkbox.style.accentColor = 'var(--accent-color)';
             
             const label = document.createElement('span');
             label.innerText = item.text;
-            label.style.fontSize = '1.2rem';
+            label.style.fontSize = '1.05rem';
             
             if (item.checked) {
                 label.style.textDecoration = 'line-through';
