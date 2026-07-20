@@ -3,433 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catatan Saya</title>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
-    <style>
-        /* --- CSS VARIABLES (TEMA KARTUN COKLAT) --- */
-        :root {
-            --bg-color: #fdf6e3; /* Warna dasar cream yang nyaman di mata */
-            --surface-color: #ffffff;
-            --text-primary: #5c4033; /* Coklat tua untuk teks */
-            --text-secondary: #8b7355;
-            --accent-color: #d4a373; /* Karamel */
-            --accent-hover: #c89564;
-            --danger-color: #e07a5f;
-            --danger-hover: #d06a4f;
-            --border-color: #5c4033; /* Border coklat tegas khas kartun */
-            --shadow-cartoon: 4px 4px 0px #5c4033; /* Bayangan solid 2D */
-            --shadow-cartoon-hover: 2px 2px 0px #5c4033;
-            --radius: 16px;
-            --transition: all 0.2s ease-in-out;
-        }
-
-        [data-theme="dark"] {
-            --bg-color: #3e2723;
-            --surface-color: #4e342e;
-            --text-primary: #fff8e1;
-            --text-secondary: #d7ccc8;
-            --accent-color: #ffb300;
-            --accent-hover: #ffa000;
-            --danger-color: #ef5350;
-            --border-color: #261612;
-            --shadow-cartoon: 4px 4px 0px #1a1007;
-            --shadow-cartoon-hover: 2px 2px 0px #1a1007;
-        }
-
-        /* --- GLOBAL --- */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Quicksand', sans-serif;
-        }
-
-        h1, h2, h3, .nav-brand {
-            font-family: 'Fredoka', sans-serif;
-            color: var(--text-primary);
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-primary);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            transition: background-color 0.3s;
-        }
-
-        /* --- NAVBAR --- */
-        nav {
-            background-color: var(--surface-color);
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            border-bottom: 3px solid var(--border-color);
-        }
-
-        .nav-brand-container {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            cursor: pointer;
-        }
-
-        .nav-brand {
-            font-size: 1.6rem;
-            font-weight: 600;
-            letter-spacing: 1px;
-        }
-
-        .nav-controls {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-        }
-
-        .search-bar {
-            padding: 0.6rem 1.2rem;
-            border-radius: 50px;
-            border: 2px solid var(--border-color);
-            background-color: var(--bg-color);
-            color: var(--text-primary);
-            width: 250px;
-            outline: none;
-            font-size: 1rem;
-            font-weight: 600;
-            box-shadow: inset 2px 2px 0px rgba(0,0,0,0.05);
-            transition: var(--transition);
-        }
-
-        .search-bar:focus {
-            border-color: var(--accent-color);
-        }
-
-        .theme-toggle {
-            background-color: var(--surface-color);
-            border: 2px solid var(--border-color);
-            cursor: pointer;
-            padding: 0.6rem;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-primary);
-            box-shadow: 2px 2px 0px var(--border-color);
-            transition: var(--transition);
-        }
-
-        .theme-toggle:hover {
-            transform: translate(1px, 1px);
-            box-shadow: 1px 1px 0px var(--border-color);
-        }
-
-        /* --- MAIN CONTAINER --- */
-        main {
-            flex: 1;
-            width: 100%;
-            max-width: 1000px;
-            margin: 2rem auto;
-            padding: 0 2rem;
-        }
-
-        /* --- BUTTONS --- */
-        .btn {
-            padding: 0.8rem 1.5rem;
-            border: 2px solid var(--border-color);
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: var(--transition);
-            box-shadow: var(--shadow-cartoon);
-        }
-
-        .btn:active {
-            transform: translate(2px, 2px);
-            box-shadow: var(--shadow-cartoon-hover);
-        }
-
-        .btn-primary {
-            background-color: var(--accent-color);
-            color: var(--surface-color);
-        }
-
-        .btn-secondary {
-            background-color: var(--surface-color);
-            color: var(--text-primary);
-        }
-
-        .btn-danger {
-            background-color: var(--danger-color);
-            color: white;
-        }
-
-        /* --- FORM SECTION --- */
-        .form-section {
-            background-color: var(--surface-color);
-            padding: 2.5rem;
-            border-radius: var(--radius);
-            border: 3px solid var(--border-color);
-            box-shadow: var(--shadow-cartoon);
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-size: 1.1rem;
-            color: var(--text-primary);
-            font-weight: 700;
-        }
-
-        input[type="text"], textarea, select {
-            width: 100%;
-            padding: 1rem;
-            border-radius: 12px;
-            border: 2px solid var(--border-color);
-            background-color: var(--bg-color);
-            color: var(--text-primary);
-            font-size: 1rem;
-            font-weight: 600;
-            outline: none;
-            transition: var(--transition);
-        }
-
-        input[type="text"]:focus, textarea:focus, select:focus {
-            border-color: var(--accent-color);
-            box-shadow: var(--shadow-cartoon);
-        }
-
-        textarea {
-            resize: vertical;
-            min-height: 150px;
-        }
-
-        input[type="file"] {
-            width: 100%;
-            padding: 0.8rem;
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            background-color: var(--bg-color);
-            border-radius: 12px;
-            border: 2px dashed var(--border-color);
-            cursor: pointer;
-        }
-
-        .image-preview-box {
-            margin-top: 1rem;
-            padding: 1rem;
-            border: 2px dashed var(--border-color);
-            border-radius: 12px;
-            background-color: var(--bg-color);
-            text-align: center;
-        }
-
-        .image-preview-box img {
-            max-width: 100%;
-            max-height: 200px;
-            border-radius: 8px;
-            border: 2px solid var(--border-color);
-            margin-bottom: 1rem;
-            object-fit: cover;
-        }
-
-        /* --- NOTES GRID --- */
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
-
-        .notes-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .note-card {
-            background-color: var(--surface-color);
-            border-radius: var(--radius);
-            padding: 1.8rem;
-            border: 3px solid var(--border-color);
-            box-shadow: var(--shadow-cartoon);
-            transition: var(--transition);
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .note-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 6px 6px 0px var(--border-color);
-        }
-
-        .note-category {
-            display: inline-block;
-            font-size: 0.85rem;
-            padding: 0.4rem 1rem;
-            background-color: var(--accent-color);
-            color: var(--surface-color);
-            border-radius: 50px;
-            font-family: 'Fredoka', sans-serif;
-            font-weight: 500;
-            border: 2px solid var(--border-color);
-            align-self: flex-start;
-        }
-
-        .note-title {
-            font-size: 1.4rem;
-            word-wrap: break-word;
-        }
-
-        .note-actions {
-            display: flex;
-            gap: 0.8rem;
-            margin-top: auto;
-            padding-top: 1rem;
-        }
-
-        .note-actions button {
-            flex: 1;
-            padding: 0.6rem;
-            font-size: 0.9rem;
-        }
-
-        /* --- PAGE DETAIL --- */
-        .detail-container {
-            background-color: var(--surface-color);
-            padding: 3rem;
-            border-radius: var(--radius);
-            border: 3px solid var(--border-color);
-            box-shadow: var(--shadow-cartoon);
-        }
-
-        .view-date {
-            font-size: 1rem;
-            color: var(--text-secondary);
-            display: block;
-            margin-bottom: 2rem;
-            font-weight: 600;
-            border-bottom: 2px dashed var(--border-color);
-            padding-bottom: 1rem;
-        }
-
-        .view-content {
-            font-size: 1.15rem;
-            line-height: 1.8;
-            color: var(--text-primary);
-            white-space: pre-wrap;
-            margin-bottom: 2rem;
-            font-weight: 600;
-        }
-
-        .view-image {
-            width: 100%;
-            max-height: 400px;
-            border-radius: 12px;
-            object-fit: cover;
-            cursor: zoom-in;
-            border: 3px solid var(--border-color);
-            box-shadow: var(--shadow-cartoon);
-        }
-
-        /* --- MODAL FULLSCREEN IMAGE --- */
-        #imageModal {
-            display: none;
-            position: fixed;
-            z-index: 1010;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(92, 64, 51, 0.9); /* Brown overlay */
-            align-items: center; justify-content: center;
-        }
-        
-        #imageModal.active { display: flex; }
-
-        .image-modal-content {
-            max-width: 90%; max-height: 90vh;
-            border-radius: 16px;
-            border: 4px solid var(--surface-color);
-        }
-
-        .image-modal-close {
-            position: absolute; top: 20px; right: 30px;
-            color: white; font-size: 40px; font-weight: bold;
-            cursor: pointer; font-family: 'Fredoka', sans-serif;
-        }
-
-        /* --- FOOTER --- */
-        footer {
-            text-align: center;
-            padding: 2rem;
-            margin-top: auto;
-            color: var(--text-secondary);
-            font-size: 1rem;
-            font-weight: 600;
-            border-top: 3px solid var(--border-color);
-            background-color: var(--surface-color);
-        }
-
-        /* --- RESPONSIVE --- */
-        @media (max-width: 768px) {
-            .search-bar { width: 160px; }
-            .detail-container { padding: 1.5rem; }
-        }
-    </style>
+    <title>Catatan Pantai</title>
+    <!-- Menggunakan font modern -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+    <!-- Menghubungkan ke file CSS terpisah -->
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
     <nav>
         <div class="nav-brand-container" onclick="showPage('home')">
-            <img src="https://images.bukaolshop.com/hosting/54490/baeebfa8be78791927.png" style="width: 35px; height: 35px; border-radius: 8px; border: 2px solid var(--border-color); object-fit: cover;" alt="App Logo">
-            <div class="nav-brand">CATATAN PENTING</div>
+            <img src="https://images.bukaolshop.com/hosting/54490/baeebfa8be78791927.png" class="logo-img" alt="App Logo">
+            <div class="nav-brand">OCEAN NOTES</div>
         </div>
         
         <div class="nav-controls">
             <input type="text" id="searchInput" class="search-bar" placeholder="Cari catatan..." onkeyup="searchNotes()">
             <button class="theme-toggle" onclick="toggleTheme()" title="Ganti Tema">
+                <!-- Icon Moon -->
                 <svg id="moonIcon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                <!-- Icon Sun -->
                 <svg id="sunIcon" style="display:none;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
             </button>
         </div>
     </nav>
 
     <main>
+        <!-- HALAMAN BERANDA -->
         <div id="pageHome">
             <div class="page-header">
                 <h2>Catatan Saya</h2>
-                <button class="btn btn-primary" onclick="openForm()">+ Buat Baru</button>
+                <button class="btn btn-primary glow-effect" onclick="openForm()">+ Buat Baru</button>
             </div>
             <section class="notes-grid" id="notesContainer">
-                </section>
+                <!-- Catatan akan dirender di sini -->
+            </section>
         </div>
 
+        <!-- HALAMAN FORM -->
         <div id="pageForm" style="display: none;">
-            <button class="btn btn-secondary" onclick="showPage('home')" style="margin-bottom: 1.5rem;">&larr; Kembali</button>
-            <aside class="form-section">
+            <button class="btn btn-secondary glow-effect" onclick="showPage('home')" style="margin-bottom: 1.5rem;">&larr; Kembali</button>
+            <aside class="form-section glow-border">
                 <h2 id="formTitle" style="margin-bottom: 1.5rem; font-size: 1.8rem;">Buat Catatan Baru</h2>
                 <form id="noteForm">
                     <input type="hidden" id="noteId">
+                    
                     <div class="form-group">
                         <label for="title">Judul Catatan</label>
-                        <input type="text" id="title" required placeholder="Tulis judul di sini...">
+                        <input type="text" id="title" class="glow-input" required placeholder="Tulis judul di sini...">
                     </div>
+                    
                     <div class="form-group">
                         <label for="category">Kategori</label>
-                        <input type="text" id="category" required placeholder="Contoh: Ide, Tugas...">
+                        <input type="text" id="category" class="glow-input" required placeholder="Contoh: Liburan, Tugas...">
                     </div>
                     
                     <div class="form-group">
                         <label for="noteType">Tipe Catatan</label>
-                        <select id="noteType" onchange="toggleNoteTypeInput()">
+                        <select id="noteType" class="glow-input" onchange="toggleNoteTypeInput()">
                             <option value="text">📄 Catatan Biasa</option>
                             <option value="checklist">☑️ Catatan Checklist (Tugas)</option>
                         </select>
@@ -437,43 +68,46 @@
 
                     <div class="form-group" id="textContentFormGroup">
                         <label for="content">Isi Catatan</label>
-                        <textarea id="content" required placeholder="Tulis cerita menarikku..."></textarea>
+                        <textarea id="content" class="glow-input" required placeholder="Tulis cerita di pinggir pantai..."></textarea>
                     </div>
 
                     <div class="form-group" id="checklistFormGroup" style="display: none;">
                         <label>Daftar Checklist / Tugas</label>
                         <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
-                            <input type="text" id="newChecklistItem" placeholder="Tambah kegiatan baru..." onkeypress="handleChecklistEnter(event)">
-                            <button type="button" class="btn btn-primary" onclick="triggerAddChecklist()" style="padding: 0.5rem 1.2rem;">+</button>
+                            <input type="text" id="newChecklistItem" class="glow-input" placeholder="Tambah kegiatan baru..." onkeypress="handleChecklistEnter(event)">
+                            <button type="button" class="btn btn-primary glow-effect" onclick="triggerAddChecklist()" style="padding: 0.5rem 1.2rem;">+</button>
                         </div>
                         <div id="checklistItemsContainer" style="display: flex; flex-direction: column; gap: 0.5rem;">
-                            </div>
+                            <!-- Baris checklist muncul di sini -->
+                        </div>
                     </div>
 
                     <div class="form-group">
                         <label for="image">Lampirkan Foto (Opsional)</label>
-                        <input type="file" id="image" accept="image/*" onchange="previewImage(event)">
+                        <input type="file" id="image" class="glow-input file-input" accept="image/*" onchange="previewImage(event)">
                         <input type="hidden" id="existingImage">
                         
-                        <div id="imagePreviewBox" class="image-preview-box" style="display: none;">
+                        <div id="imagePreviewBox" class="image-preview-box glow-border" style="display: none;">
                             <img id="imagePreview" src="" alt="Preview">
                             <br>
-                            <button type="button" class="btn btn-danger" onclick="removeImage()">🗑️ Hapus Gambar</button>
+                            <button type="button" class="btn btn-danger glow-effect" onclick="removeImage()">🗑️ Hapus Gambar</button>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary" id="submitBtn" style="width: 100%; font-size: 1.2rem; padding: 1rem;">Simpan Catatan</button>
+                    
+                    <button type="submit" class="btn btn-primary glow-effect submit-btn" id="submitBtn">Simpan Catatan</button>
                 </form>
             </aside>
         </div>
 
+        <!-- HALAMAN DETAIL (BACA CATATAN) -->
         <div id="pageDetail" style="display: none;">
-            <button class="btn btn-secondary" onclick="showPage('home')" style="margin-bottom: 1.5rem;">&larr; Kembali</button>
-            <div class="detail-container">
-                <span id="viewCategory" class="note-category" style="margin-bottom: 1rem;"></span>
+            <button class="btn btn-secondary glow-effect" onclick="showPage('home')" style="margin-bottom: 1.5rem;">&larr; Kembali</button>
+            <div class="detail-container glow-border">
+                <span id="viewCategory" class="note-category"></span>
                 <h1 id="viewTitle" style="font-size: 2.5rem; margin-bottom: 0.5rem;"></h1>
                 <span id="viewDate" class="view-date"></span>
                 <div id="viewContent" class="view-content"></div>
-                <img id="viewImage" class="view-image" style="display: none;" onclick="openImageModal(this.src)" alt="Lampiran">
+                <img id="viewImage" class="view-image glow-border" style="display: none;" onclick="openImageModal(this.src)" alt="Lampiran">
             </div>
         </div>
 
@@ -483,426 +117,13 @@
         &copy; 2026 PT Arta Makmur Jaya Sentosa. All Rights Reserved.
     </footer>
 
+    <!-- MODAL GAMBAR -->
     <div id="imageModal" onclick="closeImageModal(event)">
         <span class="image-modal-close">&times;</span>
-        <img class="image-modal-content" id="fullImage">
+        <img class="image-modal-content glow-border" id="fullImage">
     </div>
 
-    <script>
-        // --- SETUP MULTI-HALAMAN ---
-        const pages = {
-            home: document.getElementById('pageHome'),
-            form: document.getElementById('pageForm'),
-            detail: document.getElementById('pageDetail')
-        };
-
-        function showPage(pageName) {
-            Object.values(pages).forEach(page => page.style.display = 'none');
-            pages[pageName].style.display = 'block';
-            window.scrollTo(0, 0);
-            
-            // Tampilkan search bar hanya di home
-            document.getElementById('searchInput').style.display = (pageName === 'home') ? 'block' : 'none';
-        }
-
-        // --- INDEXED DB SETUP ---
-        const dbName = "ArtaNotesCartoonDB";
-        let db;
-        let notesArray = []; // State untuk dirender di UI
-
-        function initDB() {
-            return new Promise((resolve, reject) => {
-                const request = indexedDB.open(dbName, 1);
-                
-                request.onupgradeneeded = (event) => {
-                    db = event.target.result;
-                    if (!db.objectStoreNames.contains("notes")) {
-                        db.createObjectStore("notes", { keyPath: "id" });
-                    }
-                };
-                
-                request.onsuccess = (event) => {
-                    db = event.target.result;
-                    resolve(db);
-                };
-                
-                request.onerror = (event) => reject("Error opening DB: " + event.target.errorCode);
-            });
-        }
-
-        async function loadNotes() {
-            return new Promise((resolve) => {
-                const transaction = db.transaction(["notes"], "readonly");
-                const store = transaction.objectStore("notes");
-                const request = store.getAll();
-                
-                request.onsuccess = () => {
-                    notesArray = request.result;
-                    renderNotes();
-                    resolve();
-                };
-            });
-        }
-
-        function saveNoteToDB(note) {
-            return new Promise((resolve) => {
-                const transaction = db.transaction(["notes"], "readwrite");
-                const store = transaction.objectStore("notes");
-                store.put(note);
-                transaction.oncomplete = () => resolve();
-            });
-        }
-
-        function deleteNoteFromDB(id) {
-            return new Promise((resolve) => {
-                const transaction = db.transaction(["notes"], "readwrite");
-                const store = transaction.objectStore("notes");
-                store.delete(id);
-                transaction.oncomplete = () => resolve();
-            });
-        }
-
-        // --- INISIALISASI SAAT HALAMAN DIMUAT ---
-        window.onload = async () => {
-            applySavedTheme();
-            await initDB();
-            await loadNotes();
-            showPage('home');
-        };
-
-        // --- MANAJEMEN TEMA ---
-        function toggleTheme() {
-            const htmlTag = document.documentElement;
-            const newTheme = htmlTag.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
-            htmlTag.setAttribute('data-theme', newTheme);
-            localStorage.setItem('arta_cartoon_theme', newTheme);
-            updateThemeIcon(newTheme);
-        }
-
-        function applySavedTheme() {
-            const savedTheme = localStorage.getItem('arta_cartoon_theme') || 'light';
-            document.documentElement.setAttribute('data-theme', savedTheme);
-            updateThemeIcon(savedTheme);
-        }
-
-        function updateThemeIcon(theme) {
-            document.getElementById('moonIcon').style.display = theme === 'dark' ? 'none' : 'block';
-            document.getElementById('sunIcon').style.display = theme === 'dark' ? 'block' : 'none';
-        }
-
-        // --- RENDER CATATAN (BERANDA) ---
-        function renderNotes(filterText = '') {
-            const container = document.getElementById('notesContainer');
-            container.innerHTML = '';
-            
-            const filteredNotes = notesArray.filter(note => 
-                note.title.toLowerCase().includes(filterText.toLowerCase()) || 
-                note.category.toLowerCase().includes(filterText.toLowerCase())
-            );
-
-            if(filteredNotes.length === 0) {
-                container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 3rem; border: 3px dashed var(--border-color); border-radius: 20px;"><h3>Belum ada catatan saya di sini! 🐾</h3></div>';
-                return;
-            }
-
-            // Render terbalik (terbaru di atas)
-            [...filteredNotes].reverse().forEach(note => {
-                const isChecklist = note.type === 'checklist';
-                const card = document.createElement('div');
-                card.className = 'note-card';
-                card.innerHTML = `
-                    <span class="note-category">${note.category} ${isChecklist ? '☑️' : '📄'}</span>
-                    <h3 class="note-title">${note.title}</h3>
-                    <div class="note-actions">
-                        <button class="btn btn-primary" onclick="viewDetail(${note.id})">Baca</button>
-                        <button class="btn btn-secondary" onclick="editNote(${note.id})">Edit</button>
-                        <button class="btn btn-danger" onclick="deleteNote(${note.id})">Hapus</button>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        // --- FITUR FORM & GAMBAR ---
-        function openForm() {
-            resetForm();
-            showPage('form');
-        }
-
-        function resetForm() {
-            document.getElementById('noteForm').reset();
-            document.getElementById('noteId').value = '';
-            document.getElementById('existingImage').value = '';
-            document.getElementById('noteType').value = 'text';
-            document.getElementById('checklistItemsContainer').innerHTML = '';
-            toggleNoteTypeInput();
-            removeImage(); // Sembunyikan preview
-            document.getElementById('formTitle').innerText = 'Buat Catatan Baru';
-            document.getElementById('submitBtn').innerText = 'Simpan Catatan';
-        }
-
-        // FITUR BARU: Handle tampilan tipe form input
-        function toggleNoteTypeInput() {
-            const type = document.getElementById('noteType').value;
-            const textGroup = document.getElementById('textContentFormGroup');
-            const checklistGroup = document.getElementById('checklistFormGroup');
-            
-            if (type === 'checklist') {
-                textGroup.style.display = 'none';
-                document.getElementById('content').removeAttribute('required');
-                checklistGroup.style.display = 'block';
-            } else {
-                textGroup.style.display = 'block';
-                document.getElementById('content').setAttribute('required', 'true');
-                checklistGroup.style.display = 'none';
-            }
-        }
-
-        // FITUR BARU: Manajemen Baris Checklist di Form
-        function addChecklistItemRow(text = '', checked = false) {
-            const container = document.getElementById('checklistItemsContainer');
-            const row = document.createElement('div');
-            row.className = 'checklist-form-row';
-            row.style.display = 'flex';
-            row.style.gap = '0.5rem';
-            row.style.alignItems = 'center';
-            
-            row.innerHTML = `
-                <input type="checkbox" class="chk-status" ${checked ? 'checked' : ''} style="width: 20px; height: 20px; cursor: pointer;">
-                <input type="text" class="chk-text" value="${text}" placeholder="Tulis kegiatan di sini..." required style="flex: 1; padding: 0.6rem 1rem; border: 2px solid var(--border-color); border-radius: 10px; background-color: var(--bg-color); color: var(--text-primary); font-weight: 600;">
-                <button type="button" class="btn btn-danger" onclick="this.parentElement.remove()" style="padding: 0.5rem 0.8rem; box-shadow: none;">🗑️</button>
-            `;
-            container.appendChild(row);
-        }
-
-        function triggerAddChecklist() {
-            const input = document.getElementById('newChecklistItem');
-            if (input.value.trim() !== '') {
-                addChecklistItemRow(input.value.trim(), false);
-                input.value = '';
-            }
-        }
-
-        function handleChecklistEnter(event) {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                triggerAddChecklist();
-            }
-        }
-
-        function previewImage(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('imagePreview').src = e.target.result;
-                    document.getElementById('imagePreviewBox').style.display = 'block';
-                    document.getElementById('existingImage').value = ''; // Reset image lama jika ada upload baru
-                }
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function removeImage() {
-            document.getElementById('image').value = ''; // Bersihkan input file
-            document.getElementById('existingImage').value = ''; // Bersihkan data existing
-            document.getElementById('imagePreview').src = '';
-            document.getElementById('imagePreviewBox').style.display = 'none';
-        }
-
-        // --- SIMPAN CATATAN KE DB ---
-        document.getElementById('noteForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-
-            const idInput = document.getElementById('noteId').value;
-            const title = document.getElementById('title').value;
-            const category = document.getElementById('category').value;
-            const noteType = document.getElementById('noteType').value;
-            const content = document.getElementById('content').value;
-            const imageFile = document.getElementById('image').files[0];
-            const existingImage = document.getElementById('existingImage').value;
-
-            // Proses data isi berdasarkan tipe catatan
-            let finalContent = content;
-            if (noteType === 'checklist') {
-                const rows = document.querySelectorAll('.checklist-form-row');
-                const items = [];
-                rows.forEach(row => {
-                    const text = row.querySelector('.chk-text').value;
-                    const checked = row.querySelector('.chk-status').checked;
-                    items.push({ text, checked });
-                });
-                finalContent = items; // Berupa Array Objek
-            }
-
-            const proceedSave = async (imgBase64) => {
-                const noteData = {
-                    id: idInput ? parseInt(idInput) : Date.now(),
-                    title,
-                    category,
-                    type: noteType,
-                    content: finalContent,
-                    date: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }),
-                    image: imgBase64
-                };
-
-                await saveNoteToDB(noteData);
-                await loadNotes(); // Refresh array dari DB
-                showPage('home');
-            };
-
-            // Logika gambar
-            if (imageFile) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    proceedSave(event.target.result);
-                };
-                reader.readAsDataURL(imageFile);
-            } else {
-                proceedSave(existingImage || null);
-            }
-        });
-
-        // --- HALAMAN DETAIL ---
-        function viewDetail(id) {
-            const note = notesArray.find(n => n.id === id);
-            if (!note) return;
-
-            document.getElementById('viewCategory').innerText = note.category;
-            document.getElementById('viewTitle').innerText = note.title;
-            document.getElementById('viewDate').innerText = 'Dibuat pada: ' + note.date;
-
-            const viewContentEl = document.getElementById('viewContent');
-            viewContentEl.innerHTML = '';
-
-            // Render Interaktif jika tipenya Checklist
-            if (note.type === 'checklist' && Array.isArray(note.content)) {
-                note.content.forEach((item, index) => {
-                    const itemDiv = document.createElement('div');
-                    itemDiv.style.display = 'flex';
-                    itemDiv.style.alignItems = 'center';
-                    itemDiv.style.gap = '0.8rem';
-                    itemDiv.style.marginBottom = '0.8rem';
-                    
-                    const checkbox = document.createElement('input');
-                    checkbox.type = 'checkbox';
-                    checkbox.checked = item.checked;
-                    checkbox.style.width = '22px';
-                    checkbox.style.height = '22px';
-                    checkbox.style.cursor = 'pointer';
-                    
-                    const label = document.createElement('span');
-                    label.innerText = item.text;
-                    label.style.fontSize = '1.2rem';
-                    if (item.checked) {
-                        label.style.textDecoration = 'line-through';
-                        label.style.color = 'var(--text-secondary)';
-                    }
-
-                    // Aksi instan ketika kotak dicentang di halaman Baca Detail
-                    checkbox.onchange = async () => {
-                        item.checked = checkbox.checked;
-                        if (checkbox.checked) {
-                            label.style.textDecoration = 'line-through';
-                            label.style.color = 'var(--text-secondary)';
-                        } else {
-                            label.style.textDecoration = 'none';
-                            label.style.color = 'var(--text-primary)';
-                        }
-                        await saveNoteToDB(note); // Simpan otomatis statusnya
-                    };
-
-                    itemDiv.appendChild(checkbox);
-                    itemDiv.appendChild(label);
-                    viewContentEl.appendChild(itemDiv);
-                });
-            } else {
-                // Catatan Biasa (Text)
-                const p = document.createElement('p');
-                p.innerText = note.content;
-                p.style.whiteSpace = 'pre-wrap';
-                viewContentEl.appendChild(p);
-            }
-
-            const viewImg = document.getElementById('viewImage');
-            if(note.image) {
-                viewImg.src = note.image;
-                viewImg.style.display = 'block';
-            } else {
-                viewImg.src = '';
-                viewImg.style.display = 'none';
-            }
-
-            showPage('detail');
-        }
-
-        // --- EDIT CATATAN ---
-        function editNote(id) {
-            const note = notesArray.find(n => n.id === id);
-            if (!note) return;
-
-            resetForm();
-
-            document.getElementById('noteId').value = note.id;
-            document.getElementById('title').value = note.title;
-            document.getElementById('category').value = note.category;
-            
-            const noteType = note.type || 'text';
-            document.getElementById('noteType').value = noteType;
-            toggleNoteTypeInput();
-
-            if (noteType === 'checklist' && Array.isArray(note.content)) {
-                note.content.forEach(item => {
-                    addChecklistItemRow(item.text, item.checked);
-                });
-            } else {
-                document.getElementById('content').value = note.content;
-            }
-            
-            // Handle image edit
-            if(note.image) {
-                document.getElementById('existingImage').value = note.image;
-                document.getElementById('imagePreview').src = note.image;
-                document.getElementById('imagePreviewBox').style.display = 'block';
-            } else {
-                removeImage();
-            }
-            
-            document.getElementById('formTitle').innerText = 'Edit Catatan Lucu';
-            document.getElementById('submitBtn').innerText = 'Update Catatan';
-            
-            showPage('form');
-        }
-
-        // --- HAPUS CATATAN ---
-        async function deleteNote(id) {
-            if(confirm('Yakin ingin menghapus catatan ini? 🥺')) {
-                await deleteNoteFromDB(id);
-                await loadNotes();
-            }
-        }
-
-        // --- PENCARIAN ---
-        function searchNotes() {
-            const searchText = document.getElementById('searchInput').value;
-            renderNotes(searchText);
-        }
-
-        // --- MODAL GAMBAR FULLSCREEN ---
-        const imgModal = document.getElementById('imageModal');
-        const modalImgFull = document.getElementById('fullImage');
-
-        function openImageModal(imgSrc) {
-            imgModal.classList.add('active');
-            modalImgFull.src = imgSrc;
-        }
-
-        function closeImageModal(event) {
-            if(event.target.id === 'imageModal' || event.target.className === 'image-modal-close') {
-                imgModal.classList.remove('active');
-                setTimeout(() => { modalImgFull.src = ''; }, 300);
-            }
-        }
-    </script>
+    <!-- Menghubungkan ke file JavaScript terpisah -->
+    <script src="script.js"></script>
 </body>
 </html>
