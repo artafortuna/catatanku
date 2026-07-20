@@ -15,7 +15,7 @@
     --glow-color: rgba(0, 180, 216, 0.5);
     --glow-danger: rgba(239, 71, 111, 0.5);
     
-    --radius: 10px; /* Lebih presisi */
+    --radius: 10px;
     --transition: all 0.2s ease-in-out;
 }
 
@@ -31,7 +31,6 @@
     --danger-color: #ff006e; 
     --border-color: #00f5d4;
     
-    /* Efek Glow Gelap */
     --glow-color: rgba(0, 245, 212, 0.6);
     --glow-danger: rgba(255, 0, 110, 0.6);
 }
@@ -64,7 +63,7 @@ body {
     display: flex;
     flex-direction: column;
     transition: color 0.3s, background-image 0.5s;
-    font-size: 0.95rem; /* Base font sedikit dikecilkan agar presisi */
+    font-size: 0.95rem; 
 }
 
 /* --- EFEK GLOW (NEON) --- */
@@ -84,7 +83,7 @@ body {
 }
 .glow-input {
     width: 100%;
-    padding: 0.5rem 0.6rem; /* Padding dirapatkan */
+    padding: 0.5rem 0.6rem;
     border-radius: 6px;
     border: 1px solid var(--border-color);
     background-color: var(--bg-color-solid);
@@ -106,7 +105,7 @@ textarea.glow-input {
 /* --- NAVBAR --- */
 nav {
     background-color: var(--surface-color);
-    padding: 0.6rem 1.2rem; /* Tinggi navbar diperkecil */
+    padding: 0.6rem 1.2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -120,19 +119,24 @@ nav {
 .nav-brand-container {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.6rem;
     cursor: pointer;
 }
+
+/* LOGO: Ukuran diperbesar sedikit, diberi padding agar tidak mepet garis */
 .logo-img {
-    width: 28px; 
-    height: 28px; 
-    border-radius: 6px;
-    border: 1px solid var(--accent-color); 
-    object-fit: cover;
+    width: 36px; 
+    height: 36px; 
+    padding: 4px; /* Ruang kosong antara gambar dan bingkai */
+    border-radius: 8px; /* Tetap persegi sudut melengkung */
+    border: 1.5px solid var(--accent-color); 
+    background-color: var(--bg-color-solid); /* Memberi warna dasar di dalam bingkai */
+    object-fit: contain; /* Memastikan logo utuh di dalam padding */
     box-shadow: 0 0 6px var(--glow-color);
 }
+
 .nav-brand {
-    font-size: 1.1rem; /* Ukuran lebih presisi */
+    font-size: 1.1rem;
     font-weight: 700;
     letter-spacing: 1px;
     text-transform: uppercase;
@@ -191,6 +195,27 @@ main {
     color: white; 
     border: 1px solid var(--danger-color) !important; 
 }
+
+/* FITUR COPY BUTTON DI HALAMAN BACA */
+.copy-btn {
+    background: transparent;
+    border: none;
+    color: var(--accent-color);
+    cursor: pointer;
+    padding: 0.3rem;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+}
+.copy-btn:hover {
+    color: var(--accent-hover);
+    transform: scale(1.1);
+    background-color: var(--bg-color-solid);
+    box-shadow: 0 0 6px var(--glow-color);
+}
+[data-theme="dark"] .copy-btn:hover { color: #fff; }
 
 /* --- FORM SECTION --- */
 .form-section {
@@ -308,7 +333,7 @@ main {
 /* --- FOOTER --- */
 footer {
     text-align: center;
-    padding: 0.6rem; /* Dikurangi sangat ramping */
+    padding: 0.6rem;
     margin-top: auto;
     color: var(--text-secondary);
     font-size: 0.75rem;
